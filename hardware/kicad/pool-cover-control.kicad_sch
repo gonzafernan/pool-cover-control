@@ -1,0 +1,19 @@
+(kicad_sch
+	(version 20231120)
+	(generator "eeschema")
+	(generator_version "8.0")
+	(uuid "5c20c9eb-2c9b-4810-9f42-05cc49ca5670")
+	(paper "A4")
+	(title_block
+		(title "Pool Cover Control")
+		(date "2026-05-26")
+		(rev "A")
+		(company "Gonzalo G. Fernandez")
+	)
+	(lib_symbols)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+)
