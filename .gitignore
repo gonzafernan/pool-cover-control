@@ -1,0 +1,15 @@
+# KiCad
+hardware/kicad/*-backups/
+hardware/kicad/**/_autosave-*
+hardware/kicad/**/*.kicad_prl
+hardware/kicad/**/fp-info-cache
+hardware/kicad/**/*.kicad_pcb-bak
+hardware/kicad/**/*.kicad_sch-bak
+hardware/kicad/**/*.lck
+
+# Firmware build output
+firmware/build/
+
+# OS metadata
+.DS_Store
+Thumbs.db

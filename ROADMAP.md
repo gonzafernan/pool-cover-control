@@ -78,7 +78,7 @@ flowchart LR
 | Task | Description |
 |------|-------------|
 | 2.1 | Create KiCad project, configure title block with project name and revision |
-| 2.2 | Verify or create KiCad symbols for all non-standard parts (HF115F relay, PC817, AO3401) |
+| 2.2 | Verify or create KiCad symbols for all non-standard parts (HF115F relay, PC817, DMP3028LK3-13) |
 | 2.3 | Enter each sub-circuit following the order above |
 | 2.4 | Apply net names consistently across all sheets (NET_12V, NET_3V3, KEY_OPEN, LS_CLOSE, etc.) |
 | 2.5 | Add power flags to suppress ERC warnings on power nets |
