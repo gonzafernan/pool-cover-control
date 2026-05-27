@@ -2,8 +2,8 @@ Ref,Part Number,Description,Package,Qty,LCSC C-Number,JLCPCB Class,Stock OK,Note
 U1,STM32G031K8T6,MCU Cortex-M0+ 64KB flash,LQFP-32,1,C432203,,,
 U2,ULN2003ADRE4,7-channel Darlington relay driver,SOIC-16,1,C181730,,,
 U3,AMS1117-3.3,LDO regulator 12V to 3.3V 1A,SOT-223,1,C6186,,,
-Q1,DMP3028LK3-13,P-channel MOSFET reverse polarity protection,TO-252-2 DPAK,1,C461078,,,Replaces AO3401 — insufficient current rating and Vgs violation. DMP3028LK3-13: -30V -27A 25mΩ. PCB tab copper pour required (min 1cm²)
-RL1-RL4,HF115F-V-012-1ZS,SPDT relay 12V coil 30A contacts,PCB through-hole,4,C5317576,,,
+Q1,DMP3028LK3-13,P-channel MOSFET reverse polarity protection,TO-252 DPAK,1,C461078,,,Replaces AO3401: insufficient current rating and Vgs violation. DMP3028LK3-13: -30V -27A 25mΩ. PCB tab copper pour required (min 1cm²)
+RL1-RL4,SLA-12VDC-SL-C,SPDT relay 12V coil 30A contacts,PCB through-hole 6-pin 32x27.6mm,4,C125736,,,Replaces HF115F-25/12-H3TF (C5317576) which is Form A SPST-NO — no NC contact for hardware interlock
 OC1-OC4,PC817,Optocoupler,SOP-4,4,C22447129,,,
 F1,TBD,Blade fuse holder 20A automotive PCB mount,Through-hole,1,C41371864,,,
 D1,SMBJ15CA,Bidirectional TVS motor output protection,SMB DO-214AA,1,C78809,,,Replaces SMDJ15CA (wrong package DO-215AB). SMBJ15CA Littelfuse in correct SMB package
@@ -16,7 +16,7 @@ J1,DG128-5.08-04P,Pluggable terminal block socket 4-pin 5.08mm,Through-hole,1,C9
 J2,DG128-5.08-04P,Pluggable terminal block socket 4-pin 5.08mm,Through-hole,1,C90087,,,
 J3,DG128-5.0-03P-14-00A(H),Pluggable terminal block socket 3-pin 5.08mm,Through-hole,1,C691861,,,
 J4,DG128-5.0-03P-14-00A(H),Pluggable terminal block socket 3-pin 5.08mm,Through-hole,1,C691861,,,
-J5,B-2100S04P-A110,Pin header 1x4 2.54mm pitch SWD (changed from 2x2 1.27mm),Through-hole,1,C124378,,,Verify on LCSC — design change from 2x2 1.27mm to 1x4 2.54mm for availability
+J5,B-2100S04P-A110,Pin header 1x4 2.54mm pitch SWD,Through-hole,1,C124378,,,Changed from 2x2 1.27mm: 1.27mm dual-row headers unavailable on LCSC
 JP1-JP2,B-2100S02P-A110,Pin header 1x2 2.54mm pitch bypass jumpers,Through-hole,2,C124375,,,
 C1,TBD,Electrolytic capacitor 470uF 25V,Through-hole,1,C165519,,,
 C2-C3,TBD,MLCC capacitor 10uF 25V LDO bulk,0805,2,C15850,,,

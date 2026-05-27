@@ -66,7 +66,7 @@ flowchart TB
 | Continuous current (design target) | 15A |
 | Stall current (design target) | 30A |
 | Fuse | 20A, automotive blade, PCB-mounted holder |
-| Relay contact rating | 30A at 14VDC minimum (HF115F series) |
+| Relay contact rating | 30A (SLA-12VDC-SL-C, confirmed from LCSC C125736) |
 | Motor PCB trace width | 3mm minimum, 2oz copper |
 
 **Rationale:** Sizing for the mid-range residential pool cover bracket. The 20A fuse provides adequate inrush headroom to avoid nuisance trips while protecting relay contacts and PCB traces below their rated limits. The 50A PSU capacity is intentionally oversized; the fuse is the active protection boundary.
@@ -100,7 +100,7 @@ flowchart LR
 | Parameter | Value |
 |-----------|-------|
 | Topology | Full H-bridge, 4x SPST-NO relays |
-| Relay part | HF115F-V-012-1ZS (Hongfa, 12V coil, 30A / 14VDC contacts, PCB through-hole) |
+| Relay part | SLA-12VDC-SL-C (Songle, LCSC C125736, 12V coil, 30A contacts, PCB through-hole, 6-pin 32x27.6mm) |
 | Driver IC | ULN2003A Darlington array, SOIC-16 (drives all 4 coils; 3 channels spare) |
 | Hardware interlock | NC contact of RL1 in series with RL3 coil circuit, and vice versa |
 | RC snubber | 100Ω + 10nF in series, across each relay contact pair |
@@ -115,6 +115,8 @@ flowchart LR
 | FAULT (shoot-through) | RL1+RL3 or RL2+RL4 | Physically impossible via NC interlock |
 
 **Rationale:** Four SPST-NO relays give a clean open-circuit stop state and source well from JLCPCB/LCSC stock. The hardware NC interlock prevents H-bridge shoot-through independently of firmware. The RC snubber is mandatory given the 20m inductive motor cable; without it, contact arcing significantly reduces relay service life.
+
+**Note on contact rating:** The validated part (LCSC C125736) is rated 30A, satisfying the original requirement. The 20A fuse remains the active protection boundary. Motor stall current must be verified at commissioning (open item OI-1) and the fuse re-rated downward if the stall current is confirmed below 20A.
 
 ---
 
@@ -438,7 +440,7 @@ stateDiagram-v2
 | U2 | ULN2003ADRE4 | 7-channel Darlington relay driver | SOIC-16 | 1 |
 | U3 | AMS1117-3.3 | LDO regulator, 12V to 3.3V, 1A | SOT-223 | 1 |
 | Q1 | DMP3028LK3-13 | P-channel MOSFET, reverse polarity protection, −30V −27A | TO-252 DPAK | 1 |
-| RL1–RL4 | HF115F-V-012-1ZS | SPDT relay, 12V coil, 30A contacts | PCB through-hole | 4 |
+| RL1–RL4 | SLA-12VDC-SL-C | SPDT relay, 12V coil, 30A contacts | PCB through-hole, 6-pin | 4 |
 | OC1–OC4 | PC817 | Optocoupler (2x key switch, 2x limit switch) | SOP-4 | 4 |
 | F1 | TBD | Blade fuse holder, 20A automotive, PCB mount | Through-hole | 1 |
 | D1 | SMBJ15CA | Bidirectional TVS, motor output protection, 15V 600W | SMB DO-214AA | 1 |
@@ -451,8 +453,8 @@ stateDiagram-v2
 | J2 | DG128-5.08-04P | Pluggable terminal block socket, 4-pin, 5.08mm | Through-hole | 1 |
 | J3 | DG128-5.08-03P | Pluggable terminal block socket, 3-pin, 5.08mm | Through-hole | 1 |
 | J4 | DG128-5.08-03P | Pluggable terminal block socket, 3-pin, 5.08mm | Through-hole | 1 |
-| J5 | TBD | Pin header, 2x2, 1.27mm pitch, SWD | Through-hole | 1 |
-| JP1–JP2 | TBD | Pin header, 1x2, 2.54mm pitch, bypass jumpers | Through-hole | 2 |
+| J5 | B-2100S04P-A110 | Pin header, 1x4, 2.54mm pitch, SWD | Through-hole | 1 |
+| JP1–JP2 | B-2100S02P-A110 | Pin header, 1x2, 2.54mm pitch, bypass jumpers | Through-hole | 2 |
 | C1 | TBD | Electrolytic capacitor, 470µF / 25V | Through-hole | 1 |
 | C2–C3 | TBD | MLCC capacitor, 10µF / 25V, LDO bulk | 0805 | 2 |
 | C4–C10 | TBD | MLCC capacitor, 100nF, decoupling and debounce | 0402 | 7 |
