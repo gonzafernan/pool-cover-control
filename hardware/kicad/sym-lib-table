@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "pool-cover-control")(type "KiCad")(uri "${KIPRJMOD}/pool-cover-control.kicad_sym")(options "")(descr ""))
+)

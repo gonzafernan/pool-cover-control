@@ -5,6 +5,7 @@ hardware/kicad/**/*.kicad_prl
 hardware/kicad/**/fp-info-cache
 hardware/kicad/**/*.kicad_pcb-bak
 hardware/kicad/**/*.kicad_sch-bak
+hardware/kicad/**/*.bak
 hardware/kicad/**/*.lck
 
 # Firmware build output
