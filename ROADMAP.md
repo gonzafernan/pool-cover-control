@@ -62,7 +62,7 @@ Firmware development (Phase 8) begins after schematic approval and runs in paral
 
 ```mermaid
 flowchart LR
-    SC1["Power tree\n12V input, reverse polarity,\nbulk cap, LDO, 3.3V rail"]
+    SC1["Power tree\n24V input, reverse polarity,\nbulk cap, LDO, 3.3V rail"]
     SC2["H-bridge\n4x relays, ULN2003A driver,\nRC snubbers, TVS, interlock"]
     SC3["Key switch interface\n2x PC817, RC debounce,\nMSTB connector"]
     SC4["Limit switch interface\n2x PC817, 1µF EMI filters,\nhardware series path,\nbypass jumpers, MSTB connector"]
@@ -77,9 +77,10 @@ flowchart LR
 
 | Task | Description |
 |------|-------------|
-| 2.1 | Create KiCad project, configure title block with project name and revision |
-| 2.2 | Verify or create KiCad symbols for all non-standard parts (HF115F relay, PC817, DMP3028LK3-13) |
-| 2.3 | Enter each sub-circuit following the order above |
+| 2.1 | Create KiCad project, configure title block with project name and revision — **done** |
+| 2.2 | Verify or create KiCad symbols and footprints for all non-standard parts (SLA-12VDC-SL-C relay: custom symbol and footprint created and validated; footprint is mechanically identical to SLA-24VDC-SL-C so it will be reused; PC817: Isolator:PC817 with Package_SO:SOP-4_4.4x2.6mm_P1.27mm; DMP4015SK3Q-13: Device:Q_PMOS_GDS with Package_TO_SOT_SMD:TO-252-3_TabPin2 (same footprint as DMP3028LK3-13; LCSC C461089)) — **done** |
+| 2.2b | Design voltage confirmed 24V. Motor is rated 24V from original system documentation. A field test at 12V confirmed the mechanism works but 24V is the design requirement. DESIGN.md updated: Section 1 (input 24V, PSU 25A/600W, U3 changed to LMR14206XMKE/NOPB buck converter — AP7361C-33E-13 rejected, Vin(max)=6V), Section 2 (24V supply, fuse rationale updated), Section 3 (relays changed to SLA-24VDC-SL-C), Section 6 (cable voltage drop table updated), Section 8 (Q1 gate clamp DZ1=MM1W18 added, C1/C2 capacitors upgraded to 50V, buck converter external components added: L1 15µH / D6 60V/1A / C17 0.15µF / R22 3.40kΩ / R23 1.02kΩ, C3 updated to 47µF, PF1 voltage requirement added), Section 10/11/BOM updated throughout. — **done** |
+| 2.3 | Enter each sub-circuit following the order above — SC1 (power tree) complete; all footprints assigned and validated; L1 changed to Bourns SRP7028A-150M (C1847948) to match standard KiCad SRP7028A footprint; SC2 (H-bridge) next |
 | 2.4 | Apply net names consistently across all sheets (NET_12V, NET_3V3, KEY_OPEN, LS_CLOSE, etc.) |
 | 2.5 | Add power flags to suppress ERC warnings on power nets |
 | 2.6 | Annotate all references |
@@ -122,7 +123,7 @@ flowchart LR
 | 4.1 | Set up design rules: 0.2mm min trace, 0.3mm min via drill, 0.6mm annular ring, 3mm motor trace minimum |
 | 4.2 | Define board outline: 100 x 100mm |
 | 4.3 | Define layer stackup: L1 signal / L2 GND plane / L3 power / L4 signal |
-| 4.4 | Verify or create footprints for all non-standard parts (HF115F, MSTB connectors, blade fuse holder) |
+| 4.4 | Verify or create footprints for all non-standard parts (SLA-12VDC-SL-C: done; MSTB connectors, blade fuse holder: to verify at layout time) |
 | 4.5 | Place high-current components first: J1, J2, F1, RL1 through RL4 on left/top zone |
 | 4.6 | Place logic components: U1, U2, U3, OC1 through OC4 on right zone |
 | 4.7 | Place signal connectors and debug header on bottom edge |
@@ -237,7 +238,7 @@ Runs in parallel with Phases 4 through 7 after schematic approval.
 ```mermaid
 flowchart TD
     B1["Step 1: Visual inspection\nSolder joints, polarity, missing parts"]
-    B2["Step 2: Power on at current limit\nBench PSU at 12V / 100mA limit\nVerify 3.3V rail and LED_POWER on\nNo excess current draw"]
+    B2["Step 2: Power on at current limit\nBench PSU at 24V / 100mA limit\nVerify 3.3V rail and LED_POWER on\nNo excess current draw"]
     B3["Step 3: Program MCU\nConnect ST-Link to J5 SWD\nFlash firmware\nVerify LED blink pattern"]
     B4["Step 4: Input verification\nActuate key switch\nTrip limit switches manually\nVerify MCU reads correct states via debugger"]
     B5["Step 5: Relay control without motor\nCommand OPEN and CLOSE\nVerify correct relay pairs energise\nVerify hardware interlock blocks simultaneous activation"]
@@ -263,7 +264,7 @@ flowchart TD
 |------|-------------|
 | 10.1 | Apply conformal coating to fully tested PCB and allow to cure |
 | 10.2 | Mount PCB in IP65 enclosure |
-| 10.3 | Wire J1 PSU input: 12V and GND from PSU output terminals |
+| 10.3 | Wire J1 PSU input: 24V and GND from PSU output terminals |
 | 10.4 | Wire J2 motor output: 6mm² cable to motor, 20m run in dedicated conduit |
 | 10.5 | Wire J3 key switch: 3-core signal cable to key switch box, 20m run in separate conduit |
 | 10.6 | Wire J4 limit switches: 3-core signal cable from motor mechanism, 20m run in separate conduit |
@@ -281,6 +282,10 @@ flowchart TD
 
 | Reference | Description | Blocking phase |
 |-----------|-------------|---------------|
-| OI-1 | Motor actual current draw unknown. Verify at commissioning and re-rate fuse if necessary. | Phase 10 |
+| OI-1 | Motor running current at 24V not measured. At commissioning, measure current with a clamp meter during a full open and close cycle. Confirm the 10A slow-blow fuse carries running current without nuisance blowing on starting. If starting inrush repeatedly trips the fuse, increase to 15A. | Phase 10 |
 | OI-2 | Limit switch type at motor mechanism unconfirmed. Verify NC contact before wiring J4. | Phase 10 |
 | OI-3 | Key switch wiring continuity not yet verified with multimeter. Confirm before wiring J3. | Phase 10 |
+| OI-4 | SLA-24VDC-SL-C (and SLA-12VDC-SL-C, identical footprint) column x-positions (±8.9mm from centre) could not be confirmed from datasheet image. Measure a physical relay sample and compare against the footprint before approving Gerbers. | Phase 6 |
+| OI-5 | SLA-24VDC-SL-C LCSC part number not yet confirmed. Verify availability and confirm C-number at task 2.8. | Phase 2 |
+| OI-6 | PF1 polyfuse omitted. LMR14206 switch current limit (1.15A) protects the motor rail from logic faults, making a series polyfuse redundant. Closed. | — |
+| OI-7 | DZ1 confirmed: MM1W18, SOD-123, LCSC C382948. Closed. | — |

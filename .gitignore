@@ -1,6 +1,7 @@
 # KiCad
 hardware/kicad/*-backups/
 hardware/kicad/**/_autosave-*
+hardware/kicad/**/#auto_saved_files#*
 hardware/kicad/**/*.kicad_prl
 hardware/kicad/**/fp-info-cache
 hardware/kicad/**/*.kicad_pcb-bak
