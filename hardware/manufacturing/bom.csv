@@ -7,17 +7,17 @@ DZ1,MM1W18,Q1 gate clamp — limits VGS to -18V at 24V supply (80% of VGS(max)=�
 RL1-RL4,SLA-24VDC-SL-C,SPDT relay 24V coil 30A contacts,PCB through-hole 6-pin 32x27.6mm,4,TBD,,,Replaces SLA-12VDC-SL-C (12V coil burns at 24V). Same mechanical footprint. Confirm LCSC at task 2.8
 OC1-OC4,PC817,Optocoupler,SOP-4,4,C22447129,,,
 F1,XF-508P-A-B,Blade fuse holder blade PCB mount,Through-hole,1,C19727304,,,Install 10A slow-blow blade fuse (consumable not JLCPCB-assembled). Replaces 20A: fuse recomputed from 200VA/24V transformer secondary limit (8.33A). Footprint type (ATM mini vs ATO) to be confirmed at layout against Fuseholder_Blade_Mini_Keystone_3568 pad dimensions
-D1,SMBJ28CA,Bidirectional TVS motor output protection 28V standoff 600W,SMB DO-214AA,1,TBD,,,Replaces SMBJ15CA (15V standoff — conducts continuously at 24V rail). 28V standoff > 24V supply. Confirm LCSC at task 2.8
+D1,SMBJ28CA,Bidirectional TVS motor output protection 28V standoff 600W,SMB DO-214AA,1,C151259,,,Littelfuse SMBJ28CA. 28V standoff > 24V supply. Clamping voltage 45.4V. Confirmed.
 D2-D5,SS14,Schottky diode relay coil flyback,SMA,4,C127937,,,
 D6,TBD,Schottky diode buck converter catch diode 60V 1A,SMA DO-214AC,1,TBD,,,Vbr >= 1.25 x 24V = 30V minimum; 60V gives 2.5x margin. U3 LMR14206 freewheeling diode. Source from LCSC at task 2.8
 LED1,TBD,LED green,0603,1,C2994781,,,
 LED2,TBD,LED blue,0603,1,C19171394,,,
 LED3,TBD,LED yellow,0603,1,C19273152,,,
 LED4,TBD,LED red,0603,1,C19171390,,,
-J1,DG128-5.08-04P,Pluggable terminal block socket 4-pin 5.08mm,Through-hole,1,C90087,,,
-J2,DG128-5.08-04P,Pluggable terminal block socket 4-pin 5.08mm,Through-hole,1,C90087,,,
-J3,DG128-5.0-03P-14-00A(H),Pluggable terminal block socket 3-pin 5.08mm,Through-hole,1,C691861,,,
-J4,DG128-5.0-03P-14-00A(H),Pluggable terminal block socket 3-pin 5.08mm,Through-hole,1,C691861,,,
+J1,1712805,Screw terminal block 4-pin 5.08mm 24A,Through-hole,1,C90087,,,
+J2,1712805,Screw terminal block 4-pin 5.08mm 24A,Through-hole,1,C90087,,,
+J3,1729131,Screw terminal block 3-pin 5.08mm 13.5A,Through-hole,1,C91154,,,
+J4,1729131,Screw terminal block 3-pin 5.08mm 13.5A,Through-hole,1,C91154,,,
 J5,B-2100S04P-A110,Pin header 1x4 2.54mm pitch SWD,Through-hole,1,C124378,,,Changed from 2x2 1.27mm: 1.27mm dual-row headers unavailable on LCSC
 JP1-JP2,B-2100S02P-A110,Pin header 1x2 2.54mm pitch bypass jumpers,Through-hole,2,C124375,,,
 C1,TBD,Electrolytic capacitor 470uF 50V,Through-hole,1,C233099,,,Footprint: C_Radial_D10.0mm_H20.0mm_P5.00mm. Upgraded from 25V: 25V rating at 24V supply has zero derating margin.
@@ -29,8 +29,8 @@ C13-C16,TBD,MLCC capacitor 10nF 100V RC snubber,0603,4,C43253,,,
 C17,TBD,MLCC capacitor 0.15uF 50V X7R buck converter bootstrap,0603,1,C513735,,,U3 CB-SW bootstrap capacitor per LMR14206 datasheet. 50V rating avoids X5R derating at SW node. Package upgraded from 0402 to 0603.
 L1,Bourns SRP7028A-150M,Inductor 15uH shielded SMD buck converter output,SMD 7.3x6.6mm,1,C1847948,,,Isat=4A Irated=3A DCR=107mOhm AEC-Q200. L=(Vin-Vout)xVout/(VinxIripplexfsw)=12.65uH at 30% ripple 600mA 24V; 15uH selected. Footprint: L_Bourns_SRP7028A_7.3x6.6mm
 R1-R4,TBD,Resistor 330R LED series,0402,4,C177341,,,
-R5-R8,TBD,Resistor 4k7 GPIO pull-up,0402,4,C177333,,,
-R9-R12,TBD,Resistor 1k0 optocoupler LED series,0402,4,C177343,,,
+R5-R8,RC-02K472JT,Resistor 4k7 GPIO pull-up,0402,4,C48392572,,,
+R9-R12,FRC0402F1001TS,Resistor 1k0 optocoupler LED series,0402,4,C2906864,,,
 R13-R16,TBD,Resistor 10k signal conditioning,0402,4,C177337,,,
 R17-R20,TBD,Resistor 100R RC snubber,0603,4,C177347,,,
 R21,0402 1% 100K,Resistor 100k Q1 gate pull-down,0402,1,C2889345,,,

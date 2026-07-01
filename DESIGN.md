@@ -89,9 +89,9 @@ flowchart LR
     MB["MOTOR B"]
 
     V24 -->|RL1 NO contact| MA
-    MA -->|RL2 NO contact| GND
-    V24 -->|RL3 NO contact| MB
-    MB -->|RL4 NO contact| GND
+    V24 -->|RL2 NO contact| MB
+    MA  -->|RL3 NO contact| GND
+    MB  -->|RL4 NO contact| GND
 
     MCU --> ULN["ULN2003A"]
     ULN -->|coil| RL1
@@ -100,27 +100,36 @@ flowchart LR
     ULN -->|coil| RL4
 
     RL1 -.->|NC interlock| RL3
-    RL3 -.->|NC interlock| RL1
+    RL2 -.->|NC interlock| RL4
 ```
 
 | Parameter | Value |
 |-----------|-------|
-| Topology | Full H-bridge, 4x SPST-NO relays |
+| Topology | Full H-bridge, 4x SPDT relays |
 | Relay part | SLA-24VDC-SL-C (Songle, 24V coil, 30A contacts, PCB through-hole, 6-pin 32x27.6mm; LCSC part number to be confirmed at task 2.8) |
 | Driver IC | ULN2003A Darlington array, SOIC-16 (drives all 4 coils; 3 channels spare) |
-| Hardware interlock | NC contact of RL1 in series with RL3 coil circuit, and vice versa |
+| Hardware interlock | NC contact of RL1 in series with RL3 coil A1 supply; NC contact of RL2 in series with RL4 coil A1 supply; one-way column interlocks |
 | RC snubber | 100Ω + 10nF in series, across each relay contact pair |
+
+**Relay roles:**
+
+| Relay | Role | COM | NO | NC |
+|-------|------|-----|----|----|
+| RL1 | High-side A | +24V | MOTOR A | RL3 coil A1 supply |
+| RL2 | High-side B | +24V | MOTOR B | RL4 coil A1 supply |
+| RL3 | Low-side A | MOTOR A | GND | no-connect |
+| RL4 | Low-side B | MOTOR B | GND | no-connect |
 
 **Bridge states:**
 
 | State | Relays energised | Motor condition |
 |-------|-----------------|-----------------|
-| OPEN | RL1 + RL2 | Runs, open direction |
-| CLOSE | RL3 + RL4 | Runs, close direction |
+| OPEN | RL1 + RL4 | Runs, open direction |
+| CLOSE | RL2 + RL3 | Runs, close direction |
 | STOP | None | Floating (coast) |
 | FAULT (shoot-through) | RL1+RL3 or RL2+RL4 | Physically impossible via NC interlock |
 
-**Rationale:** Four SPST-NO relays give a clean open-circuit stop state and source well from JLCPCB/LCSC stock. The hardware NC interlock prevents H-bridge shoot-through independently of firmware. The RC snubber is mandatory given the 20m inductive motor cable; without it, contact arcing significantly reduces relay service life.
+**Rationale:** Four SPDT relays give a clean open-circuit stop state and source well from JLCPCB/LCSC stock. RL1 and RL2 are the high-side relays (COM=+24V): energising RL1 connects MOTOR_A to +24V; energising RL2 connects MOTOR_B to +24V. RL3 and RL4 are the low-side relays (COM=MOTOR_A and MOTOR_B respectively): energising RL3 connects MOTOR_A to GND; energising RL4 connects MOTOR_B to GND. The NC contacts implement one-way column interlocks: the RL1 NC contact (COM=+24V) is the sole coil A1 supply for RL3; the RL2 NC contact (COM=+24V) is the sole coil A1 supply for RL4. When RL1 energises, its NC contact opens, cutting coil A1 power to RL3, which cannot then energise regardless of firmware state. This prevents the direct +24V-to-GND short-circuit paths RL1+RL3 (MOTOR_A shorted) and RL2+RL4 (MOTOR_B shorted). The interlock is one-directional: RL3 and RL4 have their NC contacts terminated with no-connects and carry no interlock function. Break-before-make is naturally enforced on each column: RL3 cannot re-energise until RL1 has fully released and its NC contact has closed again. The RC snubber is mandatory given the 20m inductive motor cable; without it, contact arcing significantly reduces relay service life.
 
 **Note on contact rating:** The SLA-24VDC-SL-C contact rating is 30A, well above the estimated 8.33A stall current at 24V (transformer secondary limit). The 10A fuse is the active protection boundary. Running current must be measured at commissioning (see OI-1) to confirm the 10A fuse carries it without nuisance blowing on starting; increase to 15A if starting inrush repeatedly trips the fuse.
 
@@ -145,9 +154,9 @@ flowchart LR
 | Signal | Direction | Peripheral | Pin |
 |--------|-----------|-----------|-----|
 | RL1 OPEN high-side | Output | GPIO | PA0 |
-| RL2 OPEN low-side | Output | GPIO | PA1 |
-| RL3 CLOSE high-side | Output | GPIO | PA2 |
-| RL4 CLOSE low-side | Output | GPIO | PA3 |
+| RL2 CLOSE high-side | Output | GPIO | PA1 |
+| RL3 CLOSE low-side | Output | GPIO | PA2 |
+| RL4 OPEN low-side | Output | GPIO | PA3 |
 | LED_OPEN | Output | GPIO | PA4 |
 | LED_CLOSE | Output | GPIO | PA5 |
 | LED_FAULT | Output | GPIO | PA6 |
@@ -250,8 +259,8 @@ flowchart TB
     subgraph HW["Hardware safety path"]
         LSO_HW["LS_OPEN NC contact\n+ 1µF EMI filter cap"]
         LSC_HW["LS_CLOSE NC contact\n+ 1µF EMI filter cap"]
-        LSO_HW -->|"in series with\nRL1 + RL2 coil circuit"| STOP_O["OPEN relays drop out\nmotor stops\nMCU not involved"]
-        LSC_HW -->|"in series with\nRL3 + RL4 coil circuit"| STOP_C["CLOSE relays drop out\nmotor stops\nMCU not involved"]
+        LSO_HW -->|"in series with\nRL1 + RL4 coil circuit"| STOP_O["OPEN relays drop out\nmotor stops\nMCU not involved"]
+        LSC_HW -->|"in series with\nRL2 + RL3 coil circuit"| STOP_C["CLOSE relays drop out\nmotor stops\nMCU not involved"]
     end
 
     subgraph FW["Firmware monitoring path"]
@@ -341,21 +350,21 @@ All four LEDs placed as a group on the top layer, positioned to remain visible t
 
 | Ref | Function | Type | Pins | Pitch | Current rating | Pinout |
 |-----|----------|------|------|-------|---------------|--------|
-| J1 | PSU input | MSTB-compatible, pluggable | 4 | 5.08mm | 24A (2 pins parallel per conductor) | 1+2: +24V / 3+4: GND |
-| J2 | Motor output | MSTB-compatible, pluggable | 4 | 5.08mm | 24A (2 pins parallel per conductor) | 1+2: MOTOR_A / 3+4: MOTOR_B |
-| J3 | Key switch | MSTB-compatible, pluggable | 3 | 5.08mm | 12A | 1: COM(GND) / 2: OPEN / 3: CLOSE |
-| J4 | Limit switches | MSTB-compatible, pluggable | 3 | 5.08mm | 12A | 1: COM(GND) / 2: LS_OPEN / 3: LS_CLOSE |
+| J1 | PSU input | Screw terminal, Phoenix Contact MKDS 1712805 | 4 | 5.08mm | 48A (2 pins parallel per conductor, 24A each) | 1+2: +24V / 3+4: GND |
+| J2 | Motor output | Screw terminal, Phoenix Contact MKDS 1712805 | 4 | 5.08mm | 48A (2 pins parallel per conductor, 24A each) | 1+2: MOTOR_A / 3+4: MOTOR_B |
+| J3 | Key switch | Screw terminal, Phoenix Contact MKDSN 1729131 | 3 | 5.08mm | 13.5A | 1: COM(GND) / 2: OPEN / 3: CLOSE |
+| J4 | Limit switches | Screw terminal, Phoenix Contact MKDSN 1729131 | 3 | 5.08mm | 13.5A | 1: COM(GND) / 2: LS_OPEN / 3: LS_CLOSE |
 | J5 | SWD debug | 1x4 pin header | 4 | 2.54mm | N/A | VREF / SWDIO / SWDCK / GND |
 | JP1 | LS_OPEN bypass | 2-pin header | 2 | 2.54mm | N/A | Short to bypass LS_OPEN hardware path |
 | JP2 | LS_CLOSE bypass | 2-pin header | 2 | 2.54mm | N/A | Short to bypass LS_CLOSE hardware path |
 
-**Connector family:** Phoenix Contact MSTB 2.5 compatible throughout. Chinese-manufactured equivalents (Degson DG128, Dinkle, WJ series) are drop-in footprint compatible and available at LCSC. Using a single pitch (5.08mm) across all field connectors means the installer carries one type of mating plug body.
+**Connector family:** Phoenix Contact screw terminal blocks throughout, 5.08mm pitch. Fixed wire-to-board: field wiring is secured directly via screws with no separable plug body. Uniform 5.08mm pitch across all field connectors.
 
-**High-current pins in parallel:** The MSTB 2.5 contact is rated 12A per pin at 40°C. Paralleling two pins per conductor on J1 and J2 gives 24A combined rating, above the 20A fuse limit.
+**High-current pins in parallel:** The Phoenix Contact MKDS 1712805 contact is rated 24A per pin. Paralleling two pins per conductor on J1 and J2 gives 48A combined rating, well above the 10A fuse protection boundary.
 
 **Silkscreen:** Pin 1 marked on all connectors. Parallel power pins labelled individually (example: `+24V +24V GND GND`).
 
-**Assembly note:** All connectors are through-hole. Mating plug bodies are ordered separately and field-wired by the installer. Verify JLCPCB hand-soldering availability for through-hole components at time of order.
+**Assembly note:** All connectors are through-hole. Field wiring is terminated directly at the screw terminals. Verify JLCPCB hand-soldering availability for through-hole components at time of order.
 
 ---
 
@@ -469,10 +478,10 @@ stateDiagram-v2
 | LED2 | TBD | LED blue | 0603 | 1 |
 | LED3 | TBD | LED yellow | 0603 | 1 |
 | LED4 | TBD | LED red | 0603 | 1 |
-| J1 | DG128-5.08-04P | Pluggable terminal block socket, 4-pin, 5.08mm | Through-hole | 1 |
-| J2 | DG128-5.08-04P | Pluggable terminal block socket, 4-pin, 5.08mm | Through-hole | 1 |
-| J3 | DG128-5.08-03P | Pluggable terminal block socket, 3-pin, 5.08mm | Through-hole | 1 |
-| J4 | DG128-5.08-03P | Pluggable terminal block socket, 3-pin, 5.08mm | Through-hole | 1 |
+| J1 | Phoenix Contact 1712805 (LCSC C90087) | Screw terminal block, 4-pin, 5.08mm, 24A | Through-hole | 1 |
+| J2 | Phoenix Contact 1712805 (LCSC C90087) | Screw terminal block, 4-pin, 5.08mm, 24A | Through-hole | 1 |
+| J3 | Phoenix Contact 1729131 (LCSC C91154) | Screw terminal block, 3-pin, 5.08mm, 13.5A | Through-hole | 1 |
+| J4 | Phoenix Contact 1729131 (LCSC C91154) | Screw terminal block, 3-pin, 5.08mm, 13.5A | Through-hole | 1 |
 | J5 | B-2100S04P-A110 | Pin header, 1x4, 2.54mm pitch, SWD | Through-hole | 1 |
 | JP1–JP2 | B-2100S02P-A110 | Pin header, 1x2, 2.54mm pitch, bypass jumpers | Through-hole | 2 |
 | C1 | TBD (LCSC C233099) | Electrolytic capacitor, 470µF / 50V; footprint C_Radial_D10.0mm_H20.0mm_P5.00mm | Through-hole | 1 |
