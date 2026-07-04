@@ -474,7 +474,7 @@ stateDiagram-v2
 | C1 | TBD (LCSC C233099) | Electrolytic capacitor, 470µF / 50V; footprint C_Radial_D10.0mm_H20.0mm_P5.00mm | Through-hole | 1 |
 | C2 | Samsung CL21B225KBYNNNE (LCSC C2762602) | MLCC capacitor, 2.2µF / 50V, X7R, buck converter input bulk | 0805 | 1 |
 | C3 | TBD | MLCC capacitor, 47µF / 10V, buck converter output bulk | 0805 | 1 |
-| C4–C10 | TBD | MLCC capacitor, 100nF, decoupling and debounce | 0402 | 7 |
+| C4–C11 | TBD | MLCC capacitor, 100nF, decoupling and debounce (includes NRST filter on PF2) | 0402 | 8 |
 | C11–C12 | Taiyo Yuden UMK107BJ105KA-T (LCSC C92848) | MLCC capacitor, 1µF / 50V / X5R, limit switch EMI filter | 0603 | 2 |
 | C13–C16 | TBD | MLCC capacitor, 10nF / 100V, RC snubber | 0603 | 4 |
 | C17 | TBD (LCSC C513735) | MLCC capacitor, 0.15µF / 50V, X7R, buck converter bootstrap (CB to SW) | 0603 | 1 |
@@ -484,6 +484,7 @@ stateDiagram-v2
 | R9–R12 | SAE 1RC1206F4701 (LCSC C54532891) | Resistor, 4.7kΩ, optocoupler LED series, driven from +24V; IF ≈ 4.8mA, P ≈ 110mW per resistor | 1206 | 4 |
 | R17–R20 | TBD | Resistor, 100Ω, RC snubber | 0603 | 4 |
 | R21 | TBD | Resistor, 100kΩ, Q1 gate pull-down | 0402 | 1 |
+| R24 | YAGEO RC0402FR-0710KL (LCSC C60490) | Resistor, 10kΩ, BOOT0 pull-down (PA14) | 0402 | 1 |
 | R22 | TBD | Resistor, 3.40kΩ, U3 FB divider top; Vout = 0.765V × (1 + 3.4k/1.02k) = 3.315V | 0402, 0.1% | 1 |
 | R23 | TBD | Resistor, 1.02kΩ, U3 FB divider bottom | 0402, 0.1% | 1 |
 
