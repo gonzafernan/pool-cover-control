@@ -24,7 +24,6 @@ flowchart TB
         RL["4x SLA-24VDC-SL-C\nH-bridge"]
         OC_K["2x PC817\nKey switch isolation"]
         OC_L["2x PC817\nLimit switch isolation"]
-        JP["JP1, JP2\nBypass jumpers"]
         LEDS["POWER  OPEN  CLOSE  FAULT"]
 
         PFET --> FUSE --> BULK
@@ -160,14 +159,12 @@ flowchart LR
 | LED_OPEN | Output | GPIO | PA4 |
 | LED_CLOSE | Output | GPIO | PA5 |
 | LED_FAULT | Output | GPIO | PA6 |
-| JP1 bypass sense | Input | GPIO | PA7 |
-| JP2 bypass sense | Input | GPIO | PA8 |
 | SWDIO | Bidirectional | SWD | PA13 |
 | SWDCK | Input | SWD | PA14 |
 | KEY_OPEN | Input | GPIO | PB0 |
 | KEY_CLOSE | Input | GPIO | PB1 |
-| LS_OPEN | Input | GPIO | PB2 |
-| LS_CLOSE | Input | GPIO | PB3 |
+| LIMIT_OPEN | Input | GPIO | PB2 |
+| LIMIT_CLOSE | Input | GPIO | PB3 |
 
 **Rationale:** Direct upgrade from the originally specified STM32G030K6T6. Identical LQFP-32 footprint, 2x flash capacity (64KB vs 32KB), $0.20 cost delta at prototype quantities. The additional flash headroom accommodates the state machine, Flash EEPROM emulation for configuration, and future firmware features without a board respin.
 
@@ -184,7 +181,7 @@ flowchart LR
     end
 
     subgraph COND["Input conditioning (per active channel)"]
-        R["1kΩ series\noptocoupler LED current limit"]
+        R["4.7kΩ 1206 series\noptocoupler LED current limit\n+24V drive"]
         OC["PC817\noptocoupler"]
         PU["4.7kΩ pull-up\nto 3.3V"]
         C["100nF\ndebounce"]
@@ -202,7 +199,7 @@ flowchart LR
 | Switch type | 3-position maintained rotary key switch (OPEN / OFF / CLOSE) |
 | Common wire | GND (confirmed) |
 | Isolation | 2x PC817 optocoupler, one per active input |
-| LED current limiting | 1kΩ series resistor per optocoupler LED |
+| LED current limiting | 4.7kΩ 1206 series resistor per optocoupler LED, driven from +24V; IF = (24V − 1.25V) / 4.7kΩ ≈ 4.8mA |
 | MCU input conditioning | 4.7kΩ pull-up to 3.3V + 100nF debounce capacitor |
 | Logic polarity | Active-low at MCU GPIO after optocoupler inversion |
 
@@ -254,42 +251,37 @@ flowchart LR
 
 ```mermaid
 flowchart TB
-    J4["J4: 3-pin connector\nPin1: COM GND\nPin2: LS_OPEN\nPin3: LS_CLOSE"]
-
-    subgraph HW["Hardware safety path"]
-        LSO_HW["LS_OPEN NC contact\n+ 1µF EMI filter cap"]
-        LSC_HW["LS_CLOSE NC contact\n+ 1µF EMI filter cap"]
-        LSO_HW -->|"in series with\nRL1 + RL4 coil circuit"| STOP_O["OPEN relays drop out\nmotor stops\nMCU not involved"]
-        LSC_HW -->|"in series with\nRL2 + RL3 coil circuit"| STOP_C["CLOSE relays drop out\nmotor stops\nMCU not involved"]
-    end
+    J4["J4: 3-pin connector\nPin1: COM GND\nPin2: LIMIT_OPEN\nPin3: LIMIT_CLOSE"]
 
     subgraph FW["Firmware monitoring path"]
-        OC_O["PC817 optocoupler\nLS_OPEN channel"]
-        OC_C["PC817 optocoupler\nLS_CLOSE channel"]
+        EMI_O["1µF EMI filter\nLIMIT_OPEN channel"]
+        EMI_C["1µF EMI filter\nLIMIT_CLOSE channel"]
+        OC_O["PC817 optocoupler\nLIMIT_OPEN channel"]
+        OC_C["PC817 optocoupler\nLIMIT_CLOSE channel"]
+        EMI_O --> OC_O
+        EMI_C --> OC_C
+        P24V_O["+24V → 4.7kΩ 1206"] --> OC_O
+        P24V_C["+24V → 4.7kΩ 1206"] --> OC_C
         OC_O --> PB2["MCU PB2\n4.7kΩ pull-up + 100nF"]
         OC_C --> PB3["MCU PB3\n4.7kΩ pull-up + 100nF"]
     end
 
-    subgraph BYPASS["Manual override"]
-        JP1["JP1\nshorts LS_OPEN in hardware path"]
-        JP2["JP2\nshorts LS_CLOSE in hardware path"]
-    end
-
-    J4 --> HW
     J4 --> FW
 ```
 
 | Parameter | Value |
 |-----------|-------|
 | Connector | J4, MSTB-compatible 3-pin 5.08mm |
-| Pinout | Pin 1: COM (GND) / Pin 2: LS_OPEN / Pin 3: LS_CLOSE |
-| Switch type | Two NC (normally closed) mechanical limit switches, shared common GND |
-| Hardware safety path | NC contact of each switch wired in series with corresponding relay coil pair |
-| EMI noise filter | 1µF capacitor across each switch input, filtering transients shorter than 10ms (relay release time) |
-| MCU monitoring path | 2x PC817 optocoupler; 4.7kΩ pull-up to 3.3V + 100nF debounce per channel |
-| Manual override | JP1 (LS_OPEN bypass) and JP2 (LS_CLOSE bypass): 2-pin headers that short-circuit the NC contact in the hardware coil path |
+| Pinout | Pin 1: COM (GND) / Pin 2: LIMIT_OPEN / Pin 3: LIMIT_CLOSE |
+| Sensor type | Unconfirmed; 3-wire cable confirmed; designed for NC dry contact with shared common GND |
+| EMI noise filter | 1µF capacitor from each signal input to GND |
+| LED current limiting | 4.7kΩ 1206 series resistor per optocoupler LED, driven from +24V; IF = (24V − 1.25V) / 4.7kΩ ≈ 4.8mA |
+| MCU monitoring path | 2x PC817 optocoupler; 4.7kΩ pull-up to 3.3V + 100nF debounce per channel; MCU PB2 (LIMIT_OPEN), PB3 (LIMIT_CLOSE) |
+| Relay coil supply | RL1 A1 and RL2 A1 connected directly to +24V; no series limit switch path |
 
-**Rationale:** The hardware series path stops the motor without MCU involvement. Relay coils lose power the instant the switch opens. Optocouplers on the firmware monitoring path are warranted by the 20m cable run through a motor EMI environment. The 1µF filter cap prevents motor switching transients conducted via the shared cable run from causing spurious relay dropout in the hardware path. Bypass jumpers allow commissioning and fault diagnosis when limit switch continuity cannot be confirmed.
+**Rationale:** The sensor type is not confirmed. The system uses cam-operated micro-rupteurs inside the motor gearbox accessed via a sensor cable; the cable on this installation is 3-wire (shared common + one signal per direction) and the contact polarity has not been verified on-site. A hardware series path in the relay coil circuit was evaluated but rejected: a misconnection or unknown sensor polarity in the hardware path would permanently prevent motor operation rather than degrading gracefully. If limit switch operation cannot be confirmed on-site, a firmware build without limit switch support is flashed and J4 is left unconnected; no hardware bypass mechanism is required. A hardware coil series path can be added at a future board revision once the sensor interface is confirmed and tested.
+
+Optocouplers are warranted by the approximate 20m cable run through a motor EMI environment. The 1µF filter cap on each signal line suppresses motor switching transients conducted via the shared cable before they reach the optocoupler LED.
 
 ---
 
@@ -353,10 +345,8 @@ All four LEDs placed as a group on the top layer, positioned to remain visible t
 | J1 | PSU input | Screw terminal, Phoenix Contact MKDS 1712805 | 4 | 5.08mm | 48A (2 pins parallel per conductor, 24A each) | 1+2: +24V / 3+4: GND |
 | J2 | Motor output | Screw terminal, Phoenix Contact MKDS 1712805 | 4 | 5.08mm | 48A (2 pins parallel per conductor, 24A each) | 1+2: MOTOR_A / 3+4: MOTOR_B |
 | J3 | Key switch | Screw terminal, Phoenix Contact MKDSN 1729131 | 3 | 5.08mm | 13.5A | 1: COM(GND) / 2: OPEN / 3: CLOSE |
-| J4 | Limit switches | Screw terminal, Phoenix Contact MKDSN 1729131 | 3 | 5.08mm | 13.5A | 1: COM(GND) / 2: LS_OPEN / 3: LS_CLOSE |
+| J4 | Limit switches | Screw terminal, Phoenix Contact MKDSN 1729131 | 3 | 5.08mm | 13.5A | 1: COM(GND) / 2: LIMIT_OPEN / 3: LIMIT_CLOSE |
 | J5 | SWD debug | 1x4 pin header | 4 | 2.54mm | N/A | VREF / SWDIO / SWDCK / GND |
-| JP1 | LS_OPEN bypass | 2-pin header | 2 | 2.54mm | N/A | Short to bypass LS_OPEN hardware path |
-| JP2 | LS_CLOSE bypass | 2-pin header | 2 | 2.54mm | N/A | Short to bypass LS_CLOSE hardware path |
 
 **Connector family:** Phoenix Contact screw terminal blocks throughout, 5.08mm pitch. Fixed wire-to-board: field wiring is secured directly via screws with no separable plug body. Uniform 5.08mm pitch across all field connectors.
 
@@ -429,17 +419,16 @@ Motor current paths (PSU input through fuse, relay contacts, motor output) are k
 stateDiagram-v2
     [*] --> IDLE : Power on
 
-    IDLE --> OPENING : KEY_OPEN asserted\nLS_OPEN not tripped
-    IDLE --> CLOSING : KEY_CLOSE asserted\nLS_CLOSE not tripped
-    IDLE --> FAULT : Bypass jumper detected on power-up
+    IDLE --> OPENING : KEY_OPEN asserted\nLIMIT_OPEN not tripped
+    IDLE --> CLOSING : KEY_CLOSE asserted\nLIMIT_CLOSE not tripped
 
     OPENING --> IDLE : Key released
-    OPENING --> IDLE : LS_OPEN trips (hardware + firmware)
-    OPENING --> FAULT : 60s timeout, no LS_OPEN trip
+    OPENING --> IDLE : LIMIT_OPEN trips (firmware)
+    OPENING --> FAULT : 60s timeout, no LIMIT_OPEN trip
 
     CLOSING --> IDLE : Key released
-    CLOSING --> IDLE : LS_CLOSE trips (hardware + firmware)
-    CLOSING --> FAULT : 60s timeout, no LS_CLOSE trip
+    CLOSING --> IDLE : LIMIT_CLOSE trips (firmware)
+    CLOSING --> FAULT : 60s timeout, no LIMIT_CLOSE trip
 
     FAULT --> IDLE : Key cycled (release then re-assert)
 ```
@@ -450,9 +439,8 @@ stateDiagram-v2
 |-----------|----------|
 | KEY_OPEN and KEY_CLOSE simultaneously asserted | STOP, no movement |
 | Key released mid-travel | Motor stops immediately, all relays de-energised |
-| Limit switch trips during travel | Hardware stops motor; firmware transitions to IDLE and inhibits re-command in same direction |
+| Limit switch trips during travel | Firmware de-energises relays, transitions to IDLE, inhibits re-command in same direction |
 | 60s timeout with no limit switch trip | FAULT state; LED_FAULT on solid; motor stopped |
-| Bypass jumper installed at power-on | Motor enabled; LED_FAULT blinks continuously as warning |
 | Firmware lockup | Internal IWDG watchdog fires within 1s; all relay outputs forced low |
 
 **No homing sequence is required.** The limit switches are the sole position reference. The system has two valid states (fully open, fully closed) and one valid mid-travel transition; absolute position tracking is not needed.
@@ -483,19 +471,17 @@ stateDiagram-v2
 | J3 | Phoenix Contact 1729131 (LCSC C91154) | Screw terminal block, 3-pin, 5.08mm, 13.5A | Through-hole | 1 |
 | J4 | Phoenix Contact 1729131 (LCSC C91154) | Screw terminal block, 3-pin, 5.08mm, 13.5A | Through-hole | 1 |
 | J5 | B-2100S04P-A110 | Pin header, 1x4, 2.54mm pitch, SWD | Through-hole | 1 |
-| JP1–JP2 | B-2100S02P-A110 | Pin header, 1x2, 2.54mm pitch, bypass jumpers | Through-hole | 2 |
 | C1 | TBD (LCSC C233099) | Electrolytic capacitor, 470µF / 50V; footprint C_Radial_D10.0mm_H20.0mm_P5.00mm | Through-hole | 1 |
 | C2 | Samsung CL21B225KBYNNNE (LCSC C2762602) | MLCC capacitor, 2.2µF / 50V, X7R, buck converter input bulk | 0805 | 1 |
 | C3 | TBD | MLCC capacitor, 47µF / 10V, buck converter output bulk | 0805 | 1 |
 | C4–C10 | TBD | MLCC capacitor, 100nF, decoupling and debounce | 0402 | 7 |
-| C11–C12 | TBD | MLCC capacitor, 1µF, limit switch EMI filter | 0603 | 2 |
+| C11–C12 | Taiyo Yuden UMK107BJ105KA-T (LCSC C92848) | MLCC capacitor, 1µF / 50V / X5R, limit switch EMI filter | 0603 | 2 |
 | C13–C16 | TBD | MLCC capacitor, 10nF / 100V, RC snubber | 0603 | 4 |
 | C17 | TBD (LCSC C513735) | MLCC capacitor, 0.15µF / 50V, X7R, buck converter bootstrap (CB to SW) | 0603 | 1 |
 | L1 | Bourns SRP7028A-150M (LCSC C1847948) | Inductor, 15µH, shielded SMD, buck converter output; Isat = 4A, DCR = 107mΩ | SMD 7.3×6.6mm | 1 |
 | R1–R4 | TBD | Resistor, 330Ω, LED series | 0402 | 4 |
 | R5–R8 | TBD | Resistor, 4.7kΩ, GPIO pull-up | 0402 | 4 |
-| R9–R12 | TBD | Resistor, 1kΩ, optocoupler LED series | 0402 | 4 |
-| R13–R16 | TBD | Resistor, 10kΩ, signal conditioning | 0402 | 4 |
+| R9–R12 | SAE 1RC1206F4701 (LCSC C54532891) | Resistor, 4.7kΩ, optocoupler LED series, driven from +24V; IF ≈ 4.8mA, P ≈ 110mW per resistor | 1206 | 4 |
 | R17–R20 | TBD | Resistor, 100Ω, RC snubber | 0603 | 4 |
 | R21 | TBD | Resistor, 100kΩ, Q1 gate pull-down | 0402 | 1 |
 | R22 | TBD | Resistor, 3.40kΩ, U3 FB divider top; Vout = 0.765V × (1 + 3.4k/1.02k) = 3.315V | 0402, 0.1% | 1 |
