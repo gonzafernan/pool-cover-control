@@ -22,7 +22,7 @@
 				)
 			)
 		)
-		(property "Footprint" "pool-cover-control:SLA-12VDC-SL-C"
+		(property "Footprint" "pool-cover-control:SLA-XXVDC-SL-C"
 			(at 6.35 -1.27 0)
 			(effects
 				(font
@@ -350,7 +350,7 @@
 				)
 			)
 		)
-		(property "Footprint" "pool-cover-control:SLA-24VDC-SL-C"
+		(property "Footprint" "pool-cover-control:SLA-XXVDC-SL-C"
 			(at 6.35 -1.27 0)
 			(effects
 				(font
