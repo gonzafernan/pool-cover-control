@@ -451,17 +451,18 @@ stateDiagram-v2
 
 | Ref | Part number | Description | Package | Qty |
 |-----|-------------|-------------|---------|-----|
-| U1 | STM32G031K8T6 | MCU, Cortex-M0+, 64KB flash | LQFP-32 | 1 |
-| U2 | ULN2003ADRE4 | 7-channel Darlington relay driver | SOIC-16 | 1 |
+| U1 | STM32G031K8T7 (LCSC C724059) | MCU, Cortex-M0+, 64KB flash, −40°C to +105°C | LQFP-32 | 1 |
+| U2 | HGSEMI ULN2003AM/TR (LCSC C253892) | 7-channel Darlington relay driver, 500mA/ch, built-in clamp diodes | SOP-16 | 1 |
 | U3 | LMR14206XMKE/NOPB (LCSC C2071127) | Synchronous buck converter, 24V to 3.3V, 600mA, 1.25MHz | TSOT-23-6 | 1 |
 | Q1 | DMP4015SK3Q-13 (LCSC C461089) | P-channel MOSFET, reverse polarity protection, −40V −35A, 11mΩ | TO-252 DPAK | 1 |
 | DZ1 | MM1W18 (LCSC C382948) | Q1 gate clamp, limits Vgs to −18V at 24V supply | SOD-123 | 1 |
-| RL1–RL4 | SLA-24VDC-SL-C | SPDT relay, 24V coil, 30A contacts; LCSC part number TBD at task 2.8 | PCB through-hole, 6-pin | 4 |
+| RL1–RL4 | Songle SLA-24VDC-SL-C (LCSC C187898) | SPDT relay, 24V coil, 30A contacts | PCB through-hole, 6-pin | 4 |
 | OC1–OC4 | PC817 | Optocoupler (2x key switch, 2x limit switch) | SOP-4 | 4 |
 | F1 | XF-508P-A-B (LCSC C19727304) | Blade fuse holder, PCB mount; install 10A slow-blow blade fuse (consumable, not JLCPCB-assembled — source from automotive supplier, e.g. Littelfuse ATOF 10A); footprint type (ATM mini vs ATO) to be confirmed at layout | Through-hole | 1 |
-| D1 | SMBJ28CA | Bidirectional TVS, motor output protection, 28V standoff, 600W | SMB DO-214AA | 1 |
-| D2–D5 | SS14 | Schottky diode, relay coil flyback | SMA | 4 |
-| D6 | TBD | Schottky diode, 60V / 1A, buck converter catch diode; LCSC TBD at task 2.8 | SMA | 1 |
+| D1 | FUXINSEMI SS16 (LCSC C908233) | Schottky diode, 60V / 1A, buck converter SW node catch diode; 60V gives 2.5× margin over 24V Vin with switching transients | SMA DO-214AC | 1 |
+| D2 | MDD SS14 (LCSC C2480) | Schottky diode, 40V / 1A, Q1 gate-to-source clamp | SMA DO-214AC | 1 |
+| D3–D6 | MDD SS14 (LCSC C2480) | Schottky diode, 40V / 1A, relay coil flyback (one per relay) | SMA DO-214AC | 4 |
+| D7 | SMBJ28CA (LCSC C151259) | Bidirectional TVS, 28V standoff, 600W, motor output surge protection across MOTOR_A/MOTOR_B | SMB DO-214AA | 1 |
 | LED1 | YONGYUTAI YLED0603G (LCSC C19273151) | LED emerald green | 0603 | 1 |
 | LED2 | YONGYUTAI YLED0603B (LCSC C19171394) | LED blue | 0603 | 1 |
 | LED3 | YONGYUTAI YLED0603Y (LCSC C19273152) | LED yellow | 0603 | 1 |
@@ -471,23 +472,24 @@ stateDiagram-v2
 | J3 | Phoenix Contact 1729131 (LCSC C91154) | Screw terminal block, 3-pin, 5.08mm, 13.5A | Through-hole | 1 |
 | J4 | Phoenix Contact 1729131 (LCSC C91154) | Screw terminal block, 3-pin, 5.08mm, 13.5A | Through-hole | 1 |
 | J5 | B-2100S04P-A110 | Pin header, 1x4, 2.54mm pitch, SWD | Through-hole | 1 |
-| C1 | TBD (LCSC C233099) | Electrolytic capacitor, 470µF / 50V; footprint C_Radial_D10.0mm_H20.0mm_P5.00mm | Through-hole | 1 |
+| C1 | Nantong Jianghai ECR1HBK471MLL100020 (LCSC C233099) | Electrolytic capacitor, 470µF / 50V; footprint C_Radial_D10.0mm_H20.0mm_P5.00mm | Through-hole | 1 |
 | C2 | Samsung CL21B225KBYNNNE (LCSC C2762602) | MLCC capacitor, 2.2µF / 50V, X7R, buck converter input bulk | 0805 | 1 |
-| C3 | TBD | MLCC capacitor, 47µF / 10V, buck converter output bulk | 0805 | 1 |
+| C3 | YAGEO CC0603KRX7R9BB154 (LCSC C513735) | MLCC capacitor, 0.15µF / 50V, X7R, buck converter bootstrap (CB to SW) | 0603 | 1 |
+| C7 | Chinocera HGC0805R7475K500NSLJ (LCSC C7472970) | MLCC capacitor, 4.7µF / 50V, X7R, 3.3V rail bulk decoupling | 0805 | 1 |
 | C4–C11 | TBD | MLCC capacitor, 100nF, decoupling and debounce (includes NRST filter on PF2) | 0402 | 8 |
 | C11–C12 | Taiyo Yuden UMK107BJ105KA-T (LCSC C92848) | MLCC capacitor, 1µF / 50V / X5R, limit switch EMI filter | 0603 | 2 |
 | C13–C16 | TBD | MLCC capacitor, 10nF / 100V, RC snubber | 0603 | 4 |
-| C17 | TBD (LCSC C513735) | MLCC capacitor, 0.15µF / 50V, X7R, buck converter bootstrap (CB to SW) | 0603 | 1 |
+| C17 | Chinocera HGC0805R5476M100NSLJ (LCSC C19103846) | MLCC capacitor, 47µF / 10V, X5R, buck converter output bulk (C4 in schematic) | 0805 | 1 |
 | L1 | Bourns SRP7028A-150M (LCSC C1847948) | Inductor, 15µH, shielded SMD, buck converter output; Isat = 4A, DCR = 107mΩ | SMD 7.3×6.6mm | 1 |
 | R1, R3, R4 | FOJAN FRC0402J331 TS (LCSC C2906929) | Resistor, 330Ω ±5%, LED series (green, yellow, red) | 0402 | 3 |
 | R2 | YAGEO AC0402FR-07100RL (LCSC C144808) | Resistor, 100Ω ±1%, LED series (blue, compensates high Vf) | 0402 | 1 |
 | R5–R8 | TBD | Resistor, 4.7kΩ, GPIO pull-up | 0402 | 4 |
 | R9–R12 | SAE 1RC1206F4701 (LCSC C54532891) | Resistor, 4.7kΩ, optocoupler LED series, driven from +24V; IF ≈ 4.8mA, P ≈ 110mW per resistor | 1206 | 4 |
 | R17–R20 | TBD | Resistor, 100Ω, RC snubber | 0603 | 4 |
-| R21 | TBD | Resistor, 100kΩ, Q1 gate pull-down | 0402 | 1 |
+| R21 | FOJAN FRC0402F1003TS (LCSC C2906859) | Resistor, 100kΩ ±1%, Q1 gate pull-down | 0402 | 1 |
 | R24 | YAGEO RC0402FR-0710KL (LCSC C60490) | Resistor, 10kΩ, BOOT0 pull-down (PA14) | 0402 | 1 |
-| R22 | TBD | Resistor, 3.40kΩ, U3 FB divider top; Vout = 0.765V × (1 + 3.4k/1.02k) = 3.315V | 0402, 0.1% | 1 |
-| R23 | TBD | Resistor, 1.02kΩ, U3 FB divider bottom | 0402, 0.1% | 1 |
+| R22 | YAGEO RT0402BRD073K4L (LCSC C852765) | Resistor, 3.40kΩ ±0.1%, U3 FB divider top; Vout = 0.765V × (1 + 3.4k/1.02k) = 3.315V (R3 in schematic) | 0402 | 1 |
+| R23 | YAGEO RT0402BRD071K02L (LCSC C852594) | Resistor, 1.02kΩ ±0.1%, U3 FB divider bottom (R2 in schematic) | 0402 | 1 |
 
 ---
 

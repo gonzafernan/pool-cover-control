@@ -1,4 +1,4 @@
-(footprint "SLA-12VDC-SL-C"
+(footprint "SLA-XXVDC-SL-C"
 	(version 20240108)
 	(generator "pcbnew")
 	(generator_version "8.0")
@@ -15,7 +15,7 @@
 			)
 		)
 	)
-	(property "Value" "SLA-12VDC-SL-C"
+	(property "Value" "SLA-XXVDC-SL-C"
 		(at 0 -2.4 0)
 		(unlocked yes)
 		(layer "F.Fab")
