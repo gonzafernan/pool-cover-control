@@ -330,7 +330,7 @@ flowchart LR
 | Designator | Colour | Package | Driven by | Condition indicated |
 |------------|--------|---------|-----------|-------------------|
 | LED1 | Green | 0603 | 3.3V rail direct via 330Ω | Board powered, always on, MCU-independent |
-| LED2 | Blue | 0603 | MCU PA4 via 330Ω | Motor running, open direction |
+| LED2 | Blue | 0603 | MCU PA4 via 100Ω | Motor running, open direction |
 | LED3 | Yellow | 0603 | MCU PA5 via 330Ω | Motor running, close direction |
 | LED4 | Red | 0603 | MCU PA6 via 330Ω | Fault: timeout, bypass jumper active, or invalid input |
 
@@ -462,10 +462,10 @@ stateDiagram-v2
 | D1 | SMBJ28CA | Bidirectional TVS, motor output protection, 28V standoff, 600W | SMB DO-214AA | 1 |
 | D2–D5 | SS14 | Schottky diode, relay coil flyback | SMA | 4 |
 | D6 | TBD | Schottky diode, 60V / 1A, buck converter catch diode; LCSC TBD at task 2.8 | SMA | 1 |
-| LED1 | TBD | LED green | 0603 | 1 |
-| LED2 | TBD | LED blue | 0603 | 1 |
-| LED3 | TBD | LED yellow | 0603 | 1 |
-| LED4 | TBD | LED red | 0603 | 1 |
+| LED1 | YONGYUTAI YLED0603G (LCSC C19273151) | LED emerald green | 0603 | 1 |
+| LED2 | YONGYUTAI YLED0603B (LCSC C19171394) | LED blue | 0603 | 1 |
+| LED3 | YONGYUTAI YLED0603Y (LCSC C19273152) | LED yellow | 0603 | 1 |
+| LED4 | YONGYUTAI YLED0603R (LCSC C19171390) | LED red | 0603 | 1 |
 | J1 | Phoenix Contact 1712805 (LCSC C90087) | Screw terminal block, 4-pin, 5.08mm, 24A | Through-hole | 1 |
 | J2 | Phoenix Contact 1712805 (LCSC C90087) | Screw terminal block, 4-pin, 5.08mm, 24A | Through-hole | 1 |
 | J3 | Phoenix Contact 1729131 (LCSC C91154) | Screw terminal block, 3-pin, 5.08mm, 13.5A | Through-hole | 1 |
@@ -479,7 +479,8 @@ stateDiagram-v2
 | C13–C16 | TBD | MLCC capacitor, 10nF / 100V, RC snubber | 0603 | 4 |
 | C17 | TBD (LCSC C513735) | MLCC capacitor, 0.15µF / 50V, X7R, buck converter bootstrap (CB to SW) | 0603 | 1 |
 | L1 | Bourns SRP7028A-150M (LCSC C1847948) | Inductor, 15µH, shielded SMD, buck converter output; Isat = 4A, DCR = 107mΩ | SMD 7.3×6.6mm | 1 |
-| R1–R4 | TBD | Resistor, 330Ω, LED series | 0402 | 4 |
+| R1, R3, R4 | FOJAN FRC0402J331 TS (LCSC C2906929) | Resistor, 330Ω ±5%, LED series (green, yellow, red) | 0402 | 3 |
+| R2 | YAGEO AC0402FR-07100RL (LCSC C144808) | Resistor, 100Ω ±1%, LED series (blue, compensates high Vf) | 0402 | 1 |
 | R5–R8 | TBD | Resistor, 4.7kΩ, GPIO pull-up | 0402 | 4 |
 | R9–R12 | SAE 1RC1206F4701 (LCSC C54532891) | Resistor, 4.7kΩ, optocoupler LED series, driven from +24V; IF ≈ 4.8mA, P ≈ 110mW per resistor | 1206 | 4 |
 | R17–R20 | TBD | Resistor, 100Ω, RC snubber | 0603 | 4 |
