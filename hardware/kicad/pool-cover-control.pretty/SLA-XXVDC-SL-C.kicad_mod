@@ -69,7 +69,7 @@
 	(attr through_hole)
 	(fp_line
 		(start -13.8 -38.1)
-		(end -13.8 -18)
+		(end -13.8 -20.2)
 		(stroke
 			(width 0.1)
 			(type default)
@@ -78,8 +78,8 @@
 		(uuid "25bc6b60-2322-4000-9aad-9d365579a70e")
 	)
 	(fp_line
-		(start -13.8 -18)
-		(end -10.7 -18)
+		(start -13.8 -20.2)
+		(end -10.7 -20.2)
 		(stroke
 			(width 0.1)
 			(type default)
@@ -88,7 +88,7 @@
 		(uuid "18710f42-8fb1-4cda-949a-3793c81dda4d")
 	)
 	(fp_line
-		(start -10.7 -18)
+		(start -10.7 -20.2)
 		(end -10.7 -6.1)
 		(stroke
 			(width 0.1)
@@ -160,7 +160,7 @@
 	)
 	(fp_line
 		(start -14.3 -38.6)
-		(end -14.3 -17.5)
+		(end -14.3 -19.7)
 		(stroke
 			(width 0.05)
 			(type default)
@@ -169,8 +169,8 @@
 		(uuid "ebd16032-d3b8-41f1-b0be-6bfd540f0e86")
 	)
 	(fp_line
-		(start -14.3 -17.5)
-		(end -11.2 -17.5)
+		(start -14.3 -19.7)
+		(end -11.2 -19.7)
 		(stroke
 			(width 0.05)
 			(type default)
@@ -179,7 +179,7 @@
 		(uuid "dfed04e1-0ecd-42fa-b21d-a7df0ec8420a")
 	)
 	(fp_line
-		(start -11.2 -17.5)
+		(start -11.2 -19.7)
 		(end -11.2 -5.6)
 		(stroke
 			(width 0.05)
@@ -240,7 +240,7 @@
 	)
 	(fp_line
 		(start -13.8 -38.1)
-		(end -13.8 -18)
+		(end -13.8 -20.2)
 		(stroke
 			(width 0.1)
 			(type default)
@@ -249,8 +249,8 @@
 		(uuid "73e899eb-0f15-470e-a6ff-bbfe48fd4f4a")
 	)
 	(fp_line
-		(start -13.8 -18)
-		(end -10.7 -18)
+		(start -13.8 -20.2)
+		(end -10.7 -20.2)
 		(stroke
 			(width 0.1)
 			(type default)
@@ -259,7 +259,7 @@
 		(uuid "bc28dfd4-ab8d-45de-a018-7fa47d9ebf5a")
 	)
 	(fp_line
-		(start -10.7 -18)
+		(start -10.7 -20.2)
 		(end -10.7 -6.1)
 		(stroke
 			(width 0.1)
@@ -332,24 +332,24 @@
 	)
 	(pad "" np_thru_hole roundrect
 		(at -8.9 -25.2)
-		(size 3 3)
-		(drill 1.5)
+		(size 3.5 3.5)
+		(drill 2)
 		(layers "*.Mask")
 		(roundrect_rratio 0.1640419948)
 		(uuid "d8c14d25-25e4-4596-bac6-86dcb9bcf7aa")
 	)
 	(pad "1" thru_hole rect
 		(at 8.9 -35.32)
-		(size 3 3)
-		(drill 1.5)
+		(size 3.5 3.5)
+		(drill 2)
 		(layers "*.Cu" "*.Mask")
 		(remove_unused_layers no)
 		(uuid "a5e0071d-9fa3-40a7-b171-87e7a0d2b3b4")
 	)
 	(pad "2" thru_hole roundrect
 		(at 8.9 -27.7)
-		(size 3 3)
-		(drill 1.5)
+		(size 3.5 3.5)
+		(drill 2)
 		(layers "*.Cu" "*.Mask")
 		(remove_unused_layers no)
 		(roundrect_rratio 0.1640419948)
@@ -358,7 +358,7 @@
 	(pad "3" thru_hole roundrect
 		(at -5.1 -12.5)
 		(size 2 2)
-		(drill 1.2)
+		(drill 1)
 		(layers "*.Cu" "*.Mask")
 		(remove_unused_layers no)
 		(roundrect_rratio 0.1640419948)
@@ -367,7 +367,7 @@
 	(pad "4" thru_hole roundrect
 		(at 5.1 -12.5)
 		(size 2 2)
-		(drill 1.2)
+		(drill 1)
 		(layers "*.Cu" "*.Mask")
 		(remove_unused_layers no)
 		(roundrect_rratio 0.1640419948)
@@ -375,23 +375,22 @@
 	)
 	(pad "5" thru_hole roundrect
 		(at 0 -10)
-		(size 3 3)
-		(drill 1.5)
+		(size 3.5 3.5)
+		(drill 2)
 		(layers "*.Cu" "*.Mask")
 		(remove_unused_layers no)
 		(roundrect_rratio 0.1640419948)
 		(uuid "99b75ceb-a329-4444-82b3-df1c323a2fa0")
 	)
-	(group ""
-		(uuid "097d41aa-df2e-4505-9900-93bf58b387a8")
-		(members "75afc31b-ccef-4b1d-bd54-9d3ba30c999d" "a5e0071d-9fa3-40a7-b171-87e7a0d2b3b4"
-			"d88960df-a228-4135-8661-bb80fb0dd62d"
+	(model "${KIPRJMOD}/3d-models/SLA-24VDC-SL-C.step"
+		(offset
+			(xyz 0 22 0)
 		)
-	)
-	(group ""
-		(uuid "75afc31b-ccef-4b1d-bd54-9d3ba30c999d")
-		(members "3cae9937-2452-4585-b067-f53a71eeaec4" "76f24863-53ef-429a-9e48-76f667329f0a"
-			"99b75ceb-a329-4444-82b3-df1c323a2fa0" "d8c14d25-25e4-4596-bac6-86dcb9bcf7aa"
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 180)
 		)
 	)
 )
