@@ -7774,6 +7774,16 @@
 		)
 		(uuid "c4e608c7-8f60-469d-9ab3-3225e4a92184")
 	)
+	(label "LMR14206_SW"
+		(at 157.48 54.61 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "dc592536-eb7c-4437-b1bf-a8deb60e9545")
+	)
 	(global_label "OUT1"
 		(shape input)
 		(at 130.81 124.46 0)
