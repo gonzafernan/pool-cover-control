@@ -477,18 +477,18 @@ Reference designators match the current KiCad schematic.
 | C4 | Chinocera HGC0805R5476M100NSLJ (LCSC C19103846) | MLCC, 47uF / 10V, X5R, buck output bulk | 0805 | 1 |
 | C5, C11, C12, C17, C18, C20 | muRata GRM155R62A104KE14D (LCSC C162178) | MLCC, 100nF / 100V, X5R, MCU decoupling and debounce | 0402 | 6 |
 | C6, C8-C10 | FH 0603B103K101NT (LCSC C43253) | MLCC, 10nF / 100V, X7R, RC snubber | 0603 | 4 |
-| C7 | Chinocera HGC0805R7475K500NSLJ (LCSC C7472970) | MLCC, 4.7uF / 50V, X7R, 3.3V rail bulk - OUT OF STOCK on LCSC, substitute required | 0805 | 1 |
-| C13-C16 | Taiyo Yuden UMK107BJ105KA-T (LCSC C92848) | MLCC, 1uF / 50V, X5R, optocoupler input EMI filter (1 per channel: 2x key + 2x limit) - KiCad footprint set to 0402, part is 0603; fix footprint in KiCad | 0603 | 4 |
+| C7 | Chinocera HGC0805R7475K500NSLJ (LCSC C7472970) | MLCC, 4.7uF / 50V, X7R, 3.3V rail bulk | 0805 | 1 |
+| C13-C16 | Taiyo Yuden UMK107BJ105KA-T (LCSC C92848) | MLCC, 1uF / 50V, X5R, optocoupler input EMI filter (1 per channel: 2x key + 2x limit) | 0603 | 4 |
 | L1 | Bourns SRP7028A-150M (LCSC C1847948) | Inductor, 15uH, 3A rated, Isat 4A, DCR 107mOhm - low stock (14 units), order promptly | SMD 7.3x6.6mm | 1 |
 | R1 | FOJAN FRC0402F1003TS (LCSC C2906859) | Resistor, 100kOhm +/-1%, 62.5mW, Q1 gate pull-down | 0402 | 1 |
 | R2 | YAGEO RT0402BRD071K02L (LCSC C852594) | Resistor, 1.02kOhm +/-0.1%, 62.5mW, U3 FB divider bottom | 0402 | 1 |
 | R3 | YAGEO RT0402BRD073K4L (LCSC C852765) | Resistor, 3.40kOhm +/-0.1%, 62.5mW, U3 FB divider top; Vout = 0.765V x (1 + 3.4k/1.02k) = 3.315V | 0402 | 1 |
-| R4-R7 | TBD (LCSC C177347 - page returns 404, verify or replace) | Resistor, 100Ohm, RC snubber | 0603 | 4 |
+| R4-R7 | FOJAN FRC0603F1000TS (LCSC C2906981) | Resistor, 100Ohm +/-1%, 100mW, RC snubber | 0603 | 4 |
 | R8, R9, R12, R13 | SAE 1RC1206F4701 (LCSC C54532891) | Resistor, 4.7kOhm +/-1%, 250mW, optocoupler LED series from +24V; IF ~4.8mA, P ~110mW | 1206 | 4 |
-| R10, R11, R14, R15 | FH RC-02K472JT (LCSC C48392572) | Resistor, 4.7kOhm +/-5%, 62.5mW, GPIO pull-up to 3.3V | 0402 | 4 |
+| R10, R11, R14, R15 | FOJAN FRC0402J472 TS (LCSC C2906941) | Resistor, 4.7kOhm +/-5%, 62.5mW, GPIO pull-up to 3.3V | 0402 | 4 |
 | R16 | YAGEO RC0402FR-0710KL (LCSC C60490) | Resistor, 10kOhm +/-1%, 62.5mW, BOOT0 pull-down | 0402 | 1 |
 | R17, R19, R20 | FOJAN FRC0402J331 TS (LCSC C2906929) | Resistor, 330Ohm +/-5%, 62.5mW, LED series (green, yellow, red) | 0402 | 3 |
-| R18 | YAGEO AC0402FR-07100RL (LCSC C144808) | Resistor, 100Ohm +/-1%, 62.5mW, LED series (blue, compensates high Vf) | 0402 | 1 |
+| R18 | FOJAN FRC0402F1000TS (LCSC C2906860) | Resistor, 100Ohm +/-1%, 62.5mW, LED series (blue, compensates high Vf) | 0402 | 1 |
 
 ---
 
