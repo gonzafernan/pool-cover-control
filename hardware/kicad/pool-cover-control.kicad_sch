@@ -4677,12 +4677,6 @@
 		(uuid "8df87e99-2d93-4c88-82a3-259bf714ff79")
 	)
 	(junction
-		(at 251.46 143.51)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "8e766794-40f1-45f6-b7f6-0b8296aa890a")
-	)
-	(junction
 		(at 102.87 134.62)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -4723,6 +4717,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "aa6fa395-0b1b-491d-88e2-061022e25f73")
+	)
+	(junction
+		(at 251.46 143.51)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "abe4c2ce-e588-4070-ba19-d1df5a65704c")
 	)
 	(junction
 		(at 259.08 132.08)
@@ -5185,6 +5185,16 @@
 			(type default)
 		)
 		(uuid "1638d170-f820-4213-acde-95d27b78cd99")
+	)
+	(wire
+		(pts
+			(xy 251.46 137.16) (xy 251.46 143.51)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "16f2584e-9f88-40ae-a1e4-19f426029aa6")
 	)
 	(wire
 		(pts
@@ -5758,6 +5768,16 @@
 	)
 	(wire
 		(pts
+			(xy 248.92 137.16) (xy 251.46 137.16)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4c5c562b-fa11-4887-84b2-13f160cf4db3")
+	)
+	(wire
+		(pts
 			(xy 125.73 189.23) (xy 142.24 189.23)
 		)
 		(stroke
@@ -6005,16 +6025,6 @@
 			(type default)
 		)
 		(uuid "66392f32-f75b-4379-b875-2264c5626edd")
-	)
-	(wire
-		(pts
-			(xy 251.46 134.62) (xy 248.92 134.62)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "686b26a2-ef2a-4694-9810-7155409b855e")
 	)
 	(wire
 		(pts
@@ -7258,16 +7268,6 @@
 	)
 	(wire
 		(pts
-			(xy 251.46 134.62) (xy 251.46 143.51)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ddb4b6ad-3d3a-411d-bb7e-fbd3a4a1e996")
-	)
-	(wire
-		(pts
 			(xy 248.92 132.08) (xy 259.08 132.08)
 		)
 		(stroke
@@ -7705,6 +7705,26 @@
 			(type default)
 		)
 		(uuid "febc2817-432b-44f3-ac55-45de41f00d15")
+	)
+	(wire
+		(pts
+			(xy 248.92 134.62) (xy 251.46 134.62)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ff0a5e44-8dd2-4285-80eb-2c3826ea72ed")
+	)
+	(wire
+		(pts
+			(xy 251.46 134.62) (xy 251.46 123.19)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ffa93343-21e6-4099-8ab8-a26396052d68")
 	)
 	(text "Reverse Polarity Protection\nP-channel MOSFET in series with the supply rail, gate clamped to −18V by a Zener diode,\nthat blocks current silently if the PSU is connected with reversed polarity."
 		(exclude_from_sim no)
@@ -10169,7 +10189,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 258.1148 134.62 0)
 			(effects
 				(font
@@ -10559,7 +10579,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 268.2748 134.62 0)
 			(effects
 				(font
@@ -11826,7 +11846,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 258.1148 76.2 0)
 			(effects
 				(font
@@ -12309,6 +12329,71 @@
 			(project "pool-cover-control"
 				(path "/5c20c9eb-2c9b-4810-9f42-05cc49ca5670"
 					(reference "#PWR14")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+24V")
+		(at 251.46 123.19 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "7c6f826f-665a-41ae-be25-3ef7cf817a47")
+		(property "Reference" "#PWR1"
+			(at 251.46 127 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+24V"
+			(at 255.27 121.666 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 251.46 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 251.46 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+24V\""
+			(at 251.46 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "38d77236-e1ee-4103-9e3a-dc38cb1a9449")
+		)
+		(instances
+			(project "pool-cover-control"
+				(path "/5c20c9eb-2c9b-4810-9f42-05cc49ca5670"
+					(reference "#PWR1")
 					(unit 1)
 				)
 			)
@@ -13586,85 +13671,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector_Generic:Conn_01x03")
-		(at 243.84 132.08 180)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "9d0fda0d-f6fa-493a-ae49-cf44ea085a61")
-		(property "Reference" "J4"
-			(at 243.84 123.952 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "Limit_Switch_Conn"
-			(at 243.84 126.492 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-3-5.08_1x03_P5.08mm_Horizontal"
-			(at 243.84 132.08 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 243.84 132.08 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)"
-			(at 243.84 132.08 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "C91154"
-			(at 243.84 132.08 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "1c9623f4-3257-4f7d-a887-3918e6832689")
-		)
-		(pin "2"
-			(uuid "f11a8f1d-f037-494c-a690-f0001d3f836a")
-		)
-		(pin "3"
-			(uuid "2bb51f00-1003-4f6b-8b1c-ab891558d19a")
-		)
-		(instances
-			(project "pool-cover-control"
-				(path "/5c20c9eb-2c9b-4810-9f42-05cc49ca5670"
-					(reference "J4")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:R")
 		(at 171.45 189.23 270)
 		(mirror x)
@@ -14503,7 +14509,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 268.2748 76.2 0)
 			(effects
 				(font
@@ -15401,6 +15407,88 @@
 			(project ""
 				(path "/5c20c9eb-2c9b-4810-9f42-05cc49ca5670"
 					(reference "#PWR5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x04")
+		(at 243.84 134.62 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "c3229a41-15b0-4698-a794-399d1ec87baf")
+		(property "Reference" "J4"
+			(at 243.84 140.716 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Limit_Switch_Conn"
+			(at 241.046 126.238 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-4-5.08_1x04_P5.08mm_Horizontal"
+			(at 243.84 134.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "docs/datasheets/PhoenixContact1712805.pdf"
+			(at 243.84 134.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x04, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 243.84 134.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C90087"
+			(at 243.84 134.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "b2130629-ba63-4004-b398-0650c5e3d6b8")
+		)
+		(pin "4"
+			(uuid "ed4c45b3-ad77-4952-96bc-a122db3dde8d")
+		)
+		(pin "3"
+			(uuid "5e72b419-0ba5-4e94-ae71-fa89b6b43ba2")
+		)
+		(pin "1"
+			(uuid "54ffc2d0-bb21-4f45-a6b2-2981fb8b0479")
+		)
+		(instances
+			(project "pool-cover-control"
+				(path "/5c20c9eb-2c9b-4810-9f42-05cc49ca5670"
+					(reference "J4")
 					(unit 1)
 				)
 			)
