@@ -163,8 +163,8 @@ flowchart LR
 | SWDCK | Input | SWD | PA14 |
 | KEY_OPEN | Input | GPIO | PB0 |
 | KEY_CLOSE | Input | GPIO | PB1 |
-| LIMIT_OPEN | Input | GPIO | PB2 |
-| LIMIT_CLOSE | Input | GPIO | PB3 |
+| SENSOR_IN | Input | GPIO / ADC_IN7 (PA7 alt) | PB2 |
+| spare | Input | GPIO | PB3 |
 
 **Rationale:** Direct upgrade from the originally specified STM32G030K6T6. Identical LQFP-32 footprint, 2x flash capacity (64KB vs 32KB), $0.20 cost delta at prototype quantities. The additional flash headroom accommodates the state machine, Flash EEPROM emulation for configuration, and future firmware features without a board respin.
 
@@ -247,41 +247,40 @@ flowchart LR
 
 ---
 
-## 7. Limit Switch Interface
+## 7. Limit Sensor Interface
 
 ```mermaid
 flowchart TB
-    J4["J4: 3-pin connector\nPin1: COM GND\nPin2: LIMIT_OPEN\nPin3: LIMIT_CLOSE"]
+    J4["J4: 4-pin connector\nPin 1: GND\nPin 2: +24V sensor VCC\nPin 3: SIGNAL\nPin 4: spare"]
 
-    subgraph FW["Firmware monitoring path"]
-        EMI_O["1µF EMI filter\nLIMIT_OPEN channel"]
-        EMI_C["1µF EMI filter\nLIMIT_CLOSE channel"]
-        OC_O["PC817 optocoupler\nLIMIT_OPEN channel"]
-        OC_C["PC817 optocoupler\nLIMIT_CLOSE channel"]
-        EMI_O --> OC_O
-        EMI_C --> OC_C
-        P24V_O["+24V → 4.7kΩ 1206"] --> OC_O
-        P24V_C["+24V → 4.7kΩ 1206"] --> OC_C
-        OC_O --> PB2["MCU PB2\n4.7kΩ pull-up + 100nF"]
-        OC_C --> PB3["MCU PB3\n4.7kΩ pull-up + 100nF"]
+    subgraph FW["Sensor monitoring path"]
+        R24V["+24V → 4.7kΩ 1206 series R"]
+        OC["PC817 optocoupler"]
+        PU["4.7kΩ 0402 pull-up to 3.3V"]
+        C["100nF 0402 debounce"]
+        R24V --> OC
+        OC --> PU --> C --> PB2["MCU PB2\nSENSOR_IN"]
     end
 
-    J4 --> FW
+    J4 -- SIGNAL pin 3 --> FW
 ```
 
 | Parameter | Value |
 |-----------|-------|
-| Connector | J4, MSTB-compatible 3-pin 5.08mm |
-| Pinout | Pin 1: COM (GND) / Pin 2: LIMIT_OPEN / Pin 3: LIMIT_CLOSE |
-| Sensor type | Unconfirmed; 3-wire cable confirmed; designed for NC dry contact with shared common GND |
-| EMI noise filter | 1µF capacitor from each signal input to GND |
-| LED current limiting | 4.7kΩ 1206 series resistor per optocoupler LED, driven from +24V; IF = (24V − 1.25V) / 4.7kΩ ≈ 4.8mA |
-| MCU monitoring path | 2x PC817 optocoupler; 4.7kΩ pull-up to 3.3V + 100nF debounce per channel; MCU PB2 (LIMIT_OPEN), PB3 (LIMIT_CLOSE) |
-| Relay coil supply | RL1 A1 and RL2 A1 connected directly to +24V; no series limit switch path |
+| Connector | J4, Phoenix Contact MKDS 1712805, 4-pin, 5.08mm |
+| Pinout | Pin 1: GND / Pin 2: +24V sensor VCC / Pin 3: SIGNAL / Pin 4: spare |
+| Sensor type | 3-wire active sensor; assumed NPN open-collector digital output at 24V supply |
+| LED current limiting | 4.7kΩ 1206 series resistor from +24V to opto LED anode; LED cathode to SIGNAL; IF = (24V - 1.25V) / 4.7kΩ ≈ 4.8mA when NPN output pulls low |
+| MCU monitoring path | PC817 optocoupler; 4.7kΩ 0402 pull-up to 3.3V + 100nF debounce; MCU PB2 (SENSOR_IN) |
+| Logic polarity | Active-low at MCU: sensor NPN output pulls SIGNAL to GND, opto conducts, PB2 reads LOW |
+| Relay coil supply | RL1 A1 and RL2 A1 connected directly to +24V; no series sensor path |
+| Spare channel | Pin 4 wired through second PC817 and pull-up to MCU PB3; unpopulated at J4, available for a second sensor in a future revision |
 
-**Rationale:** The sensor type is not confirmed. The system uses cam-operated micro-rupteurs inside the motor gearbox accessed via a sensor cable; the cable on this installation is 3-wire (shared common + one signal per direction) and the contact polarity has not been verified on-site. A hardware series path in the relay coil circuit was evaluated but rejected: a misconnection or unknown sensor polarity in the hardware path would permanently prevent motor operation rather than degrading gracefully. If limit switch operation cannot be confirmed on-site, a firmware build without limit switch support is flashed and J4 is left unconnected; no hardware bypass mechanism is required. A hardware coil series path can be added at a future board revision once the sensor interface is confirmed and tested.
+**Rationale:** On-site investigation confirmed the motor gearbox sensor cable is 3-wire (GND, VCC, SIGNAL), ruling out a simple dry-contact switch. The sensor type is not confirmed but is assumed to be a Hall effect or inductive proximity switch with NPN open-collector output, which is the dominant output type for this class of motor accessory at 24V supply. A potentiometer was considered and discarded: it is atypical for end-of-travel detection inside a motor gearbox.
 
-Optocouplers are warranted by the approximate 20m cable run through a motor EMI environment. The 1µF filter cap on each signal line suppresses motor switching transients conducted via the shared cable before they reach the optocoupler LED.
+The +24V sensor supply is provided directly on J4 pin 2. If on-site measurement of the original installation reveals the sensor is supplied at a different voltage, J4 pin 2 is left unconnected and the limit sensor feature is deferred to a second board revision. No hardware bypass is required; a firmware build without SENSOR_IN support is flashed and J4 is left disconnected.
+
+The opto circuit is identical to the key switch input circuit (Section 5), reusing the same PC817, 4.7kΩ 1206 series resistor, 4.7kΩ 0402 pull-up, and 100nF debounce already in the BOM. The 20m cable run through a motor EMI environment warrants optocoupler isolation regardless of sensor type.
 
 ---
 
@@ -345,7 +344,7 @@ All four LEDs placed as a group on the top layer, positioned to remain visible t
 | J1 | PSU input | Screw terminal, Phoenix Contact MKDS 1712805 | 4 | 5.08mm | 48A (2 pins parallel per conductor, 24A each) | 1+2: +24V / 3+4: GND |
 | J2 | Motor output | Screw terminal, Phoenix Contact MKDS 1712805 | 4 | 5.08mm | 48A (2 pins parallel per conductor, 24A each) | 1+2: MOTOR_A / 3+4: MOTOR_B |
 | J3 | Key switch | Screw terminal, Phoenix Contact MKDSN 1729131 | 3 | 5.08mm | 13.5A | 1: COM(GND) / 2: OPEN / 3: CLOSE |
-| J4 | Limit switches | Screw terminal, Phoenix Contact MKDSN 1729131 | 3 | 5.08mm | 13.5A | 1: COM(GND) / 2: LIMIT_OPEN / 3: LIMIT_CLOSE |
+| J4 | Limit sensor | Screw terminal, Phoenix Contact MKDS 1712805 | 4 | 5.08mm | 24A | 1: GND / 2: +24V / 3: SIGNAL / 4: spare |
 | J5 | SWD debug | 1x4 pin header | 4 | 2.54mm | N/A | VREF / SWDIO / SWDCK / GND |
 
 **Connector family:** Phoenix Contact screw terminal blocks throughout, 5.08mm pitch. Fixed wire-to-board: field wiring is secured directly via screws with no separable plug body. Uniform 5.08mm pitch across all field connectors.
@@ -447,49 +446,49 @@ stateDiagram-v2
 
 ---
 
-## Bill of Materials (Preliminary)
+## Bill of Materials
+
+Reference designators match the current KiCad schematic.
 
 | Ref | Part number | Description | Package | Qty |
 |-----|-------------|-------------|---------|-----|
-| U1 | STM32G031K8T7 (LCSC C724059) | MCU, Cortex-M0+, 64KB flash, −40°C to +105°C | LQFP-32 | 1 |
+| U1 | STM32G031K8T7 (LCSC C724059) | MCU, Cortex-M0+, 64KB flash, -40C to +105C | LQFP-32 | 1 |
 | U2 | HGSEMI ULN2003AM/TR (LCSC C253892) | 7-channel Darlington relay driver, 500mA/ch, built-in clamp diodes | SOP-16 | 1 |
 | U3 | LMR14206XMKE/NOPB (LCSC C2071127) | Synchronous buck converter, 24V to 3.3V, 600mA, 1.25MHz | TSOT-23-6 | 1 |
-| Q1 | DMP4015SK3Q-13 (LCSC C461089) | P-channel MOSFET, reverse polarity protection, −40V −35A, 11mΩ | TO-252 DPAK | 1 |
-| DZ1 | MM1W18 (LCSC C382948) | Q1 gate clamp, limits Vgs to −18V at 24V supply | SOD-123 | 1 |
-| RL1–RL4 | Songle SLA-24VDC-SL-C (LCSC C187898) | SPDT relay, 24V coil, 30A contacts | PCB through-hole, 6-pin | 4 |
-| OC1–OC4 | PC817 | Optocoupler (2x key switch, 2x limit switch) | SOP-4 | 4 |
-| F1 | XF-508P-A-B (LCSC C19727304) | Blade fuse holder, PCB mount; install 10A slow-blow blade fuse (consumable, not JLCPCB-assembled — source from automotive supplier, e.g. Littelfuse ATOF 10A); footprint type (ATM mini vs ATO) to be confirmed at layout | Through-hole | 1 |
-| D1 | FUXINSEMI SS16 (LCSC C908233) | Schottky diode, 60V / 1A, buck converter SW node catch diode; 60V gives 2.5× margin over 24V Vin with switching transients | SMA DO-214AC | 1 |
-| D2 | MDD SS14 (LCSC C2480) | Schottky diode, 40V / 1A, Q1 gate-to-source clamp | SMA DO-214AC | 1 |
-| D3–D6 | MDD SS14 (LCSC C2480) | Schottky diode, 40V / 1A, relay coil flyback (one per relay) | SMA DO-214AC | 4 |
-| D7 | SMBJ28CA (LCSC C151259) | Bidirectional TVS, 28V standoff, 600W, motor output surge protection across MOTOR_A/MOTOR_B | SMB DO-214AA | 1 |
-| LED1 | YONGYUTAI YLED0603G (LCSC C19273151) | LED emerald green | 0603 | 1 |
-| LED2 | YONGYUTAI YLED0603B (LCSC C19171394) | LED blue | 0603 | 1 |
-| LED3 | YONGYUTAI YLED0603Y (LCSC C19273152) | LED yellow | 0603 | 1 |
-| LED4 | YONGYUTAI YLED0603R (LCSC C19171390) | LED red | 0603 | 1 |
-| J1 | Phoenix Contact 1712805 (LCSC C90087) | Screw terminal block, 4-pin, 5.08mm, 24A | Through-hole | 1 |
-| J2 | Phoenix Contact 1712805 (LCSC C90087) | Screw terminal block, 4-pin, 5.08mm, 24A | Through-hole | 1 |
-| J3 | Phoenix Contact 1729131 (LCSC C91154) | Screw terminal block, 3-pin, 5.08mm, 13.5A | Through-hole | 1 |
-| J4 | Phoenix Contact 1729131 (LCSC C91154) | Screw terminal block, 3-pin, 5.08mm, 13.5A | Through-hole | 1 |
-| J5 | B-2100S04P-A110 | Pin header, 1x4, 2.54mm pitch, SWD | Through-hole | 1 |
-| C1 | Nantong Jianghai ECR1HBK471MLL100020 (LCSC C233099) | Electrolytic capacitor, 470µF / 50V; footprint C_Radial_D10.0mm_H20.0mm_P5.00mm | Through-hole | 1 |
-| C2 | Samsung CL21B225KBYNNNE (LCSC C2762602) | MLCC capacitor, 2.2µF / 50V, X7R, buck converter input bulk | 0805 | 1 |
-| C3 | YAGEO CC0603KRX7R9BB154 (LCSC C513735) | MLCC capacitor, 0.15µF / 50V, X7R, buck converter bootstrap (CB to SW) | 0603 | 1 |
-| C7 | Chinocera HGC0805R7475K500NSLJ (LCSC C7472970) | MLCC capacitor, 4.7µF / 50V, X7R, 3.3V rail bulk decoupling | 0805 | 1 |
-| C4–C11 | TBD | MLCC capacitor, 100nF, decoupling and debounce (includes NRST filter on PF2) | 0402 | 8 |
-| C11–C12 | Taiyo Yuden UMK107BJ105KA-T (LCSC C92848) | MLCC capacitor, 1µF / 50V / X5R, limit switch EMI filter | 0603 | 2 |
-| C13–C16 | TBD | MLCC capacitor, 10nF / 100V, RC snubber | 0603 | 4 |
-| C17 | Chinocera HGC0805R5476M100NSLJ (LCSC C19103846) | MLCC capacitor, 47µF / 10V, X5R, buck converter output bulk (C4 in schematic) | 0805 | 1 |
-| L1 | Bourns SRP7028A-150M (LCSC C1847948) | Inductor, 15µH, shielded SMD, buck converter output; Isat = 4A, DCR = 107mΩ | SMD 7.3×6.6mm | 1 |
-| R1, R3, R4 | FOJAN FRC0402J331 TS (LCSC C2906929) | Resistor, 330Ω ±5%, LED series (green, yellow, red) | 0402 | 3 |
-| R2 | YAGEO AC0402FR-07100RL (LCSC C144808) | Resistor, 100Ω ±1%, LED series (blue, compensates high Vf) | 0402 | 1 |
-| R5–R8 | TBD | Resistor, 4.7kΩ, GPIO pull-up | 0402 | 4 |
-| R9–R12 | SAE 1RC1206F4701 (LCSC C54532891) | Resistor, 4.7kΩ, optocoupler LED series, driven from +24V; IF ≈ 4.8mA, P ≈ 110mW per resistor | 1206 | 4 |
-| R17–R20 | TBD | Resistor, 100Ω, RC snubber | 0603 | 4 |
-| R21 | FOJAN FRC0402F1003TS (LCSC C2906859) | Resistor, 100kΩ ±1%, Q1 gate pull-down | 0402 | 1 |
-| R24 | YAGEO RC0402FR-0710KL (LCSC C60490) | Resistor, 10kΩ, BOOT0 pull-down (PA14) | 0402 | 1 |
-| R22 | YAGEO RT0402BRD073K4L (LCSC C852765) | Resistor, 3.40kΩ ±0.1%, U3 FB divider top; Vout = 0.765V × (1 + 3.4k/1.02k) = 3.315V (R3 in schematic) | 0402 | 1 |
-| R23 | YAGEO RT0402BRD071K02L (LCSC C852594) | Resistor, 1.02kΩ ±0.1%, U3 FB divider bottom (R2 in schematic) | 0402 | 1 |
+| U4-U7 | JSMSEMI PC817C (LCSC C22447129) | Optocoupler, 5kV isolation, CTR 80-600% (2x key switch, 2x limit switch) | SOP-4 | 4 |
+| Q1 | DMP4015SK3Q-13 (LCSC C461089) | P-channel MOSFET, reverse polarity protection, -40V -35A, 7mOhm typ / 11mOhm max. Gate clamped by DZ1 to -18V | TO-252 DPAK | 1 |
+| DZ1 | MM1W18 (LCSC C382948) | Q1 gate clamp: Vz 16.8-19.2V, Pd 1W. Cathode to Source, anode to Gate | SOD-123 | 1 |
+| RL1-RL4 | Songle SLA-24VDC-SL-C (LCSC C187898) | SPDT relay, 24V coil, 640Ohm coil resistance, 30A contacts | PCB through-hole, 6-pin | 4 |
+| F1 | XFCN XF-508P-A-B (LCSC C19727304) | Blade fuse holder, 15A/500V, PCB mount; install 10A slow-blow blade fuse (source separately, not JLCPCB-assembled) | Through-hole, DIP-4 | 1 |
+| D1 | FUXINSEMI SS16 (LCSC C908233) | Schottky, 60V / 1A, buck converter SW node catch diode; 2.5x margin over 24V Vin | SMA DO-214AC | 1 |
+| D2-D6 | MDD SS14 (LCSC C2480) | Schottky, 40V / 1A (D2: Q1 gate-to-source clamp; D3-D6: relay coil flyback) | SMA DO-214AC | 5 |
+| D7 | Littelfuse SMBJ28CA (LCSC C151259) | Bidirectional TVS, 28V standoff, 600W, motor output surge protection | SMB DO-214AA | 1 |
+| LED1 | YONGYUTAI YLED0603G (LCSC C19273151) | LED emerald green, Vf 2.6-3.2V | 0603 | 1 |
+| LED2 | YONGYUTAI YLED0603B (LCSC C19171394) | LED blue, Vf 2.6-3.2V | 0603 | 1 |
+| LED3 | YONGYUTAI YLED0603Y (LCSC C19273152) | LED yellow, Vf 1.8-2.4V | 0603 | 1 |
+| LED4 | YONGYUTAI YLED0603R (LCSC C19171390) | LED red, Vf 1.8-2.4V | 0603 | 1 |
+| J1, J2 | Phoenix Contact 1712805 (LCSC C90087) | Screw terminal block, 4-pin, 5.08mm, 24A | Through-hole | 1 each |
+| J3 | Phoenix Contact 1729131 (LCSC C91154) | Screw terminal block, 3-pin, 5.08mm, 13.5A, key switch | Through-hole | 1 |
+| J4 | Phoenix Contact 1712805 (LCSC C90087) | Screw terminal block, 4-pin, 5.08mm, 24A, limit sensor (GND / +24V / SIGNAL / spare) | Through-hole | 1 |
+| J5 | XFCN PZ254V-11-04P (LCSC C2691448) | Pin header, 1x4, 2.54mm pitch, SWD | Through-hole | 1 |
+| C1 | Nantong Jianghai ECR1HBK471MLL100020 (LCSC C233099) | Electrolytic, 470uF / 50V, 2000h @ 105C | Radial D10xH20mm, P5mm | 1 |
+| C2 | Samsung CL21B225KBYNNNE (LCSC C2762602) | MLCC, 2.2uF / 50V, X7R, buck input bulk | 0805 | 1 |
+| C3 | YAGEO CC0603KRX7R9BB154 (LCSC C513735) | MLCC, 150nF / 50V, X7R, buck bootstrap (CB to SW) | 0603 | 1 |
+| C4 | Chinocera HGC0805R5476M100NSLJ (LCSC C19103846) | MLCC, 47uF / 10V, X5R, buck output bulk | 0805 | 1 |
+| C5, C11, C12, C17, C18, C20 | muRata GRM155R62A104KE14D (LCSC C162178) | MLCC, 100nF / 100V, X5R, MCU decoupling and debounce | 0402 | 6 |
+| C6, C8-C10 | FH 0603B103K101NT (LCSC C43253) | MLCC, 10nF / 100V, X7R, RC snubber | 0603 | 4 |
+| C7 | Chinocera HGC0805R7475K500NSLJ (LCSC C7472970) | MLCC, 4.7uF / 50V, X7R, 3.3V rail bulk - OUT OF STOCK on LCSC, substitute required | 0805 | 1 |
+| C13-C16 | Taiyo Yuden UMK107BJ105KA-T (LCSC C92848) | MLCC, 1uF / 50V, X5R, optocoupler input EMI filter (1 per channel: 2x key + 2x limit) - KiCad footprint set to 0402, part is 0603; fix footprint in KiCad | 0603 | 4 |
+| L1 | Bourns SRP7028A-150M (LCSC C1847948) | Inductor, 15uH, 3A rated, Isat 4A, DCR 107mOhm - low stock (14 units), order promptly | SMD 7.3x6.6mm | 1 |
+| R1 | FOJAN FRC0402F1003TS (LCSC C2906859) | Resistor, 100kOhm +/-1%, 62.5mW, Q1 gate pull-down | 0402 | 1 |
+| R2 | YAGEO RT0402BRD071K02L (LCSC C852594) | Resistor, 1.02kOhm +/-0.1%, 62.5mW, U3 FB divider bottom | 0402 | 1 |
+| R3 | YAGEO RT0402BRD073K4L (LCSC C852765) | Resistor, 3.40kOhm +/-0.1%, 62.5mW, U3 FB divider top; Vout = 0.765V x (1 + 3.4k/1.02k) = 3.315V | 0402 | 1 |
+| R4-R7 | TBD (LCSC C177347 - page returns 404, verify or replace) | Resistor, 100Ohm, RC snubber | 0603 | 4 |
+| R8, R9, R12, R13 | SAE 1RC1206F4701 (LCSC C54532891) | Resistor, 4.7kOhm +/-1%, 250mW, optocoupler LED series from +24V; IF ~4.8mA, P ~110mW | 1206 | 4 |
+| R10, R11, R14, R15 | FH RC-02K472JT (LCSC C48392572) | Resistor, 4.7kOhm +/-5%, 62.5mW, GPIO pull-up to 3.3V | 0402 | 4 |
+| R16 | YAGEO RC0402FR-0710KL (LCSC C60490) | Resistor, 10kOhm +/-1%, 62.5mW, BOOT0 pull-down | 0402 | 1 |
+| R17, R19, R20 | FOJAN FRC0402J331 TS (LCSC C2906929) | Resistor, 330Ohm +/-5%, 62.5mW, LED series (green, yellow, red) | 0402 | 3 |
+| R18 | YAGEO AC0402FR-07100RL (LCSC C144808) | Resistor, 100Ohm +/-1%, 62.5mW, LED series (blue, compensates high Vf) | 0402 | 1 |
 
 ---
 
