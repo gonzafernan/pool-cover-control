@@ -8882,7 +8882,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C48392572"
+		(property "LCSC" "C2906941"
 			(at 302.26 52.07 0)
 			(effects
 				(font
@@ -9375,7 +9375,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C48392572"
+		(property "LCSC" "C2906941"
 			(at 292.1 52.07 0)
 			(effects
 				(font
@@ -9602,7 +9602,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C177347"
+		(property "LCSC" "C2906981"
 			(at 111.76 146.05 90)
 			(effects
 				(font
@@ -9984,7 +9984,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C177347"
+		(property "LCSC" "C2906981"
 			(at 173.99 146.05 90)
 			(effects
 				(font
@@ -10102,7 +10102,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "100nF/10V"
+		(property "Value" "100nF/100V"
 			(at 302.768 136.144 0)
 			(effects
 				(font
@@ -10800,7 +10800,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "100nF/10V"
+		(property "Value" "100nF/100V"
 			(at 302.768 77.724 0)
 			(effects
 				(font
@@ -11122,7 +11122,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C177347"
+		(property "LCSC" "C2906981"
 			(at 113.03 189.23 90)
 			(effects
 				(font
@@ -11462,7 +11462,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "100nF/10V"
+		(property "Value" "100nF/100V"
 			(at 390.652 193.802 0)
 			(effects
 				(font
@@ -11980,7 +11980,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "100nF/10V"
+		(property "Value" "100nF/100V"
 			(at 258.064 187.198 0)
 			(effects
 				(font
@@ -12058,7 +12058,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "100nF/10V"
+		(property "Value" "100nF/100V"
 			(at 316.992 135.89 0)
 			(effects
 				(font
@@ -13646,7 +13646,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C48392572"
+		(property "LCSC" "C2906941"
 			(at 292.1 110.49 0)
 			(effects
 				(font
@@ -13723,7 +13723,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C177347"
+		(property "LCSC" "C2906981"
 			(at 171.45 189.23 90)
 			(effects
 				(font
@@ -13976,7 +13976,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "4.7uF/10V"
+		(property "Value" "4.7uF/50V"
 			(at 371.348 193.802 0)
 			(effects
 				(font
@@ -14889,7 +14889,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C48392572"
+		(property "LCSC" "C2906941"
 			(at 302.26 110.49 0)
 			(effects
 				(font
@@ -15732,7 +15732,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "100nF/10V"
+		(property "Value" "100nF/100V"
 			(at 316.992 77.47 0)
 			(effects
 				(font
@@ -16862,7 +16862,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C144808"
+		(property "LCSC" "C2906860"
 			(at 58.42 241.3 0)
 			(effects
 				(font
