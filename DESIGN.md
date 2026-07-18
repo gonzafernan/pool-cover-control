@@ -305,8 +305,8 @@ flowchart LR
 | R21 | 100kΩ, 0402 | Q1 gate pull-down: ensures Q1 is off when J1 is disconnected |
 | C1 | 470µF / 50V electrolytic | 24V bulk capacitance, absorbs relay coil switching transients |
 | U3 | LMR14206XMKE/NOPB (TSOT-23-6, LCSC C2071127) | 24V to 3.3V synchronous buck converter, 600mA, 1.25MHz, Vin 4.5–42V, Vref = 0.765V |
-| R22 | 3.40kΩ, 0402, 0.1% | U3 FB divider top; Vout = 0.765V × (1 + 3.4k/1.02k) = 3.315V |
-| R23 | 1.02kΩ, 0402, 0.1% | U3 FB divider bottom; in 100Ω–10kΩ range per datasheet to limit FB pin bias current error |
+| R3 | 10kΩ, 0603, 1% | U3 FB divider top; Vout = 0.765V × (1 + 10k/3k) = 3.315V |
+| R2 | 3kΩ, 0603, 1% | U3 FB divider bottom; in 100Ω–10kΩ range per datasheet to limit FB pin bias current error |
 | L1 | Bourns SRP7028A-150M (LCSC C1847948), 15µH, SMD 7.3×6.6mm | U3 output inductor; L = (Vin − Vout) × Vout / (Vin × Iripple × fsw) = 12.65µH at 30% ripple, 600mA, 24V; 15µH selected; Isat = 4A (6× margin over 635mA peak); DCR = 107mΩ |
 | D6 | 60V / 1A Schottky, SMA | U3 catch diode; Vbr ≥ 1.25 × 24V = 30V minimum; 60V gives 2.5× margin |
 | C17 | 0.15µF, 50V, X7R, 0603 ceramic (LCSC C513735) | U3 bootstrap capacitor between CB and SW pins; 50V rating chosen to avoid X5R derating at SW switching node |
@@ -453,7 +453,7 @@ Reference designators match the current KiCad schematic.
 | Ref | Part number | Description | Package | Qty |
 |-----|-------------|-------------|---------|-----|
 | U1 | STM32G031K8T7 (LCSC C724059) | MCU, Cortex-M0+, 64KB flash, -40C to +105C | LQFP-32 | 1 |
-| U2 | HGSEMI ULN2003AM/TR (LCSC C253892) | 7-channel Darlington relay driver, 500mA/ch, built-in clamp diodes | SOP-16 | 1 |
+| U2 | Texas Instruments ULN2003ADR (LCSC C7512) | 7-channel Darlington relay driver, 500mA/ch, built-in clamp diodes | SOIC-16 | 1 |
 | U3 | LMR14206XMKE/NOPB (LCSC C2071127) | Synchronous buck converter, 24V to 3.3V, 600mA, 1.25MHz | TSOT-23-6 | 1 |
 | U4-U7 | JSMSEMI PC817C (LCSC C22447129) | Optocoupler, 5kV isolation, CTR 80-600% (2x key switch, 2x limit switch) | SOP-4 | 4 |
 | Q1 | DMP4015SK3Q-13 (LCSC C461089) | P-channel MOSFET, reverse polarity protection, -40V -35A, 7mOhm typ / 11mOhm max. Gate clamped by DZ1 to -18V | TO-252 DPAK | 1 |
@@ -466,29 +466,29 @@ Reference designators match the current KiCad schematic.
 | LED1 | YONGYUTAI YLED0603G (LCSC C19273151) | LED emerald green, Vf 2.6-3.2V | 0603 | 1 |
 | LED2 | YONGYUTAI YLED0603B (LCSC C19171394) | LED blue, Vf 2.6-3.2V | 0603 | 1 |
 | LED3 | YONGYUTAI YLED0603Y (LCSC C19273152) | LED yellow, Vf 1.8-2.4V | 0603 | 1 |
-| LED4 | YONGYUTAI YLED0603R (LCSC C19171390) | LED red, Vf 1.8-2.4V | 0603 | 1 |
+| LED4 | Hubei KENTO KT-0603R (LCSC C2286) | LED red, Vf 1.8-2.4V | 0603 | 1 |
 | J1, J2 | Phoenix Contact 1712805 (LCSC C90087) | Screw terminal block, 4-pin, 5.08mm, 24A | Through-hole | 1 each |
 | J3 | Phoenix Contact 1711738 (LCSC C91156) | Screw terminal block, 3-pin, 5.08mm, 24A, key switch | Through-hole | 1 |
 | J4 | Phoenix Contact 1712805 (LCSC C90087) | Screw terminal block, 4-pin, 5.08mm, 24A, limit sensor (GND / +24V / SIGNAL / spare) | Through-hole | 1 |
 | J5 | XFCN PZ254V-11-04P (LCSC C2691448) | Pin header, 1x4, 2.54mm pitch, SWD | Through-hole | 1 |
 | C1 | Nantong Jianghai ECR1HBK471MLL100020 (LCSC C233099) | Electrolytic, 470uF / 50V, 2000h @ 105C | Radial D10xH20mm, P5mm | 1 |
-| C2 | Samsung CL21B225KBYNNNE (LCSC C2762602) | MLCC, 2.2uF / 50V, X7R, buck input bulk | 0805 | 1 |
-| C3 | YAGEO CC0603KRX7R9BB154 (LCSC C513735) | MLCC, 150nF / 50V, X7R, buck bootstrap (CB to SW) | 0603 | 1 |
-| C4 | Chinocera HGC0805R5476M100NSLJ (LCSC C19103846) | MLCC, 47uF / 10V, X5R, buck output bulk | 0805 | 1 |
-| C5, C11, C12, C17, C18, C20 | muRata GRM155R62A104KE14D (LCSC C162178) | MLCC, 100nF / 100V, X5R, MCU decoupling and debounce | 0402 | 6 |
-| C6, C8-C10 | FH 0603B103K101NT (LCSC C43253) | MLCC, 10nF / 100V, X7R, RC snubber | 0603 | 4 |
-| C7 | Chinocera HGC0805R7475K500NSLJ (LCSC C7472970) | MLCC, 4.7uF / 50V, X7R, 3.3V rail bulk | 0805 | 1 |
-| C13-C16 | Taiyo Yuden UMK107BJ105KA-T (LCSC C92848) | MLCC, 1uF / 50V, X5R, optocoupler input EMI filter (1 per channel: 2x key + 2x limit) | 0603 | 4 |
+| C2 | Samsung CL31B225KBHNNNE (LCSC C50254) | MLCC, 2.2uF / 50V, X7R, buck input bulk | 1206 | 1 |
+| C3 | Samsung CL10B224KA8NNNC (LCSC C21120) | MLCC, 220nF / 25V, X7R, buck bootstrap (CB to SW) | 0603 | 1 |
+| C4 | Samsung CL31A226KAHNNNE (LCSC C12891) | MLCC, 22uF / 25V, X5R, buck output bulk | 1206 | 1 |
+| C5, C11, C12, C17, C18, C20 | Samsung CL05B104KO5NNNC (LCSC C1525) | MLCC, 100nF / 16V, X7R, MCU decoupling and debounce | 0402 | 6 |
+| C6, C8-C10 | FH 0603B103K500NT (LCSC C57112) | MLCC, 10nF / 50V, X7R, RC snubber | 0603 | 4 |
+| C7 | Samsung CL21A475KAQNNNE (LCSC C1779) | MLCC, 4.7uF / 25V, X5R, 3.3V rail bulk | 0805 | 1 |
+| C13-C16 | Samsung CL10A105KB8NNNC (LCSC C15849) | MLCC, 1uF / 50V, X5R, optocoupler input EMI filter (1 per channel: 2x key + 2x limit) | 0603 | 4 |
 | L1 | Bourns SRP7028A-150M (LCSC C1847948) | Inductor, 15uH, 3A rated, Isat 4A, DCR 107mOhm - low stock (14 units), order promptly | SMD 7.3x6.6mm | 1 |
-| R1 | FOJAN FRC0402F1003TS (LCSC C2906859) | Resistor, 100kOhm +/-1%, 62.5mW, Q1 gate pull-down | 0402 | 1 |
-| R2 | YAGEO RT0402BRD071K02L (LCSC C852594) | Resistor, 1.02kOhm +/-0.1%, 62.5mW, U3 FB divider bottom | 0402 | 1 |
-| R3 | YAGEO RT0402BRD073K4L (LCSC C852765) | Resistor, 3.40kOhm +/-0.1%, 62.5mW, U3 FB divider top; Vout = 0.765V x (1 + 3.4k/1.02k) = 3.315V | 0402 | 1 |
-| R4-R7 | FOJAN FRC0603F1000TS (LCSC C2906981) | Resistor, 100Ohm +/-1%, 100mW, RC snubber | 0603 | 4 |
-| R8, R9, R12, R13 | SAE 1RC1206F4701 (LCSC C54532891) | Resistor, 4.7kOhm +/-1%, 250mW, optocoupler LED series from +24V; IF ~4.8mA, P ~110mW | 1206 | 4 |
-| R10, R11, R14, R15 | FOJAN FRC0402J472 TS (LCSC C2906941) | Resistor, 4.7kOhm +/-5%, 62.5mW, GPIO pull-up to 3.3V | 0402 | 4 |
-| R16 | YAGEO RC0402FR-0710KL (LCSC C60490) | Resistor, 10kOhm +/-1%, 62.5mW, BOOT0 pull-down | 0402 | 1 |
-| R17, R19, R20 | FOJAN FRC0402J331 TS (LCSC C2906929) | Resistor, 330Ohm +/-5%, 62.5mW, LED series (green, yellow, red) | 0402 | 3 |
-| R18 | FOJAN FRC0402F1000TS (LCSC C2906860) | Resistor, 100Ohm +/-1%, 62.5mW, LED series (blue, compensates high Vf) | 0402 | 1 |
+| R1 | UNI-ROYAL 0402WGF1003TCE (LCSC C25741) | Resistor, 100kOhm +/-1%, 62.5mW, Q1 gate pull-down | 0402 | 1 |
+| R2 | UNI-ROYAL 0603WAF3001T5E (LCSC C4211) | Resistor, 3kOhm +/-1%, 100mW, U3 FB divider bottom | 0603 | 1 |
+| R3 | UNI-ROYAL 0603WAF1002T5E (LCSC C25804) | Resistor, 10kOhm +/-1%, 100mW, U3 FB divider top; Vout = 0.765V x (1 + 10k/3k) = 3.315V | 0603 | 1 |
+| R4-R7 | UNI-ROYAL 0603WAF1000T5E (LCSC C22775) | Resistor, 100Ohm +/-1%, 100mW, RC snubber | 0603 | 4 |
+| R8, R9, R12, R13 | UNI-ROYAL 1206W4F4701T5E (LCSC C17936) | Resistor, 4.7kOhm +/-1%, 250mW, optocoupler LED series from +24V; IF ~4.8mA, P ~110mW | 1206 | 4 |
+| R10, R11, R14, R15 | UNI-ROYAL 0402WGF4701TCE (LCSC C25900) | Resistor, 4.7kOhm +/-1%, 62.5mW, GPIO pull-up to 3.3V | 0402 | 4 |
+| R16 | UNI-ROYAL 0603WAF1002T5E (LCSC C25804) | Resistor, 10kOhm +/-1%, 100mW, BOOT0 pull-down | 0603 | 1 |
+| R17, R19, R20 | UNI-ROYAL 0402WGF3300TCE (LCSC C25104) | Resistor, 330Ohm +/-1%, 62.5mW, LED series (green, yellow, red) | 0402 | 3 |
+| R18 | UNI-ROYAL 0402WGF1000TCE (LCSC C25076) | Resistor, 100Ohm +/-1%, 62.5mW, LED series (blue, compensates high Vf) | 0402 | 1 |
 
 ---
 
