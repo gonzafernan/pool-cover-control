@@ -9270,7 +9270,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_SO:SOP-4_4.4x2.6mm_P1.27mm"
+		(property "Footprint" "pool-cover-control:SOP-4_7.5x4.1mm_P2.54mm"
 			(at 275.59 124.46 0)
 			(effects
 				(font
@@ -9500,7 +9500,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_SO:SOP-4_4.4x2.6mm_P1.27mm"
+		(property "Footprint" "pool-cover-control:SOP-4_7.5x4.1mm_P2.54mm"
 			(at 275.59 76.2 0)
 			(effects
 				(font
@@ -13809,7 +13809,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C91154"
+		(property "LCSC" "C91156"
 			(at 243.84 73.66 0)
 			(effects
 				(font
@@ -15031,7 +15031,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Fuse:Fuseholder_Blade_Mini_Keystone_3568"
+		(property "Footprint" "pool-cover-control:Fuseholder_Blade_Mini_XFCN XF-508P-A-B"
 			(at 82.55 57.658 90)
 			(effects
 				(font
@@ -16121,7 +16121,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_SO:SOP-4_4.4x2.6mm_P1.27mm"
+		(property "Footprint" "pool-cover-control:SOP-4_7.5x4.1mm_P2.54mm"
 			(at 275.59 66.04 0)
 			(effects
 				(font
@@ -16206,7 +16206,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_SO:SOP-4_4.4x2.6mm_P1.27mm"
+		(property "Footprint" "pool-cover-control:SOP-4_7.5x4.1mm_P2.54mm"
 			(at 275.59 134.62 0)
 			(effects
 				(font

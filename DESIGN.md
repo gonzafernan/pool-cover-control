@@ -343,7 +343,7 @@ All four LEDs placed as a group on the top layer, positioned to remain visible t
 |-----|----------|------|------|-------|---------------|--------|
 | J1 | PSU input | Screw terminal, Phoenix Contact MKDS 1712805 | 4 | 5.08mm | 48A (2 pins parallel per conductor, 24A each) | 1+2: +24V / 3+4: GND |
 | J2 | Motor output | Screw terminal, Phoenix Contact MKDS 1712805 | 4 | 5.08mm | 48A (2 pins parallel per conductor, 24A each) | 1+2: MOTOR_A / 3+4: MOTOR_B |
-| J3 | Key switch | Screw terminal, Phoenix Contact MKDSN 1729131 | 3 | 5.08mm | 13.5A | 1: COM(GND) / 2: OPEN / 3: CLOSE |
+| J3 | Key switch | Screw terminal, Phoenix Contact MKDS 1711738 | 3 | 5.08mm | 24A | 1: COM(GND) / 2: OPEN / 3: CLOSE |
 | J4 | Limit sensor | Screw terminal, Phoenix Contact MKDS 1712805 | 4 | 5.08mm | 24A | 1: GND / 2: +24V / 3: SIGNAL / 4: spare |
 | J5 | SWD debug | 1x4 pin header | 4 | 2.54mm | N/A | VREF / SWDIO / SWDCK / GND |
 
@@ -468,7 +468,7 @@ Reference designators match the current KiCad schematic.
 | LED3 | YONGYUTAI YLED0603Y (LCSC C19273152) | LED yellow, Vf 1.8-2.4V | 0603 | 1 |
 | LED4 | YONGYUTAI YLED0603R (LCSC C19171390) | LED red, Vf 1.8-2.4V | 0603 | 1 |
 | J1, J2 | Phoenix Contact 1712805 (LCSC C90087) | Screw terminal block, 4-pin, 5.08mm, 24A | Through-hole | 1 each |
-| J3 | Phoenix Contact 1729131 (LCSC C91154) | Screw terminal block, 3-pin, 5.08mm, 13.5A, key switch | Through-hole | 1 |
+| J3 | Phoenix Contact 1711738 (LCSC C91156) | Screw terminal block, 3-pin, 5.08mm, 24A, key switch | Through-hole | 1 |
 | J4 | Phoenix Contact 1712805 (LCSC C90087) | Screw terminal block, 4-pin, 5.08mm, 24A, limit sensor (GND / +24V / SIGNAL / spare) | Through-hole | 1 |
 | J5 | XFCN PZ254V-11-04P (LCSC C2691448) | Pin header, 1x4, 2.54mm pitch, SWD | Through-hole | 1 |
 | C1 | Nantong Jianghai ECR1HBK471MLL100020 (LCSC C233099) | Electrolytic, 470uF / 50V, 2000h @ 105C | Radial D10xH20mm, P5mm | 1 |
