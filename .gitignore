@@ -8,6 +8,10 @@ hardware/kicad/**/*.kicad_pcb-bak
 hardware/kicad/**/*.kicad_sch-bak
 hardware/kicad/**/*.bak
 hardware/kicad/**/*.lck
+hardware/kicad/.history/
+
+# Manufacturing output (gerbers, drill, BOM, CPL): distributed via GitHub Releases
+hardware/manufacturing/
 
 # Firmware build output
 firmware/build/
