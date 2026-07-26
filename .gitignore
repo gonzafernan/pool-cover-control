@@ -1,14 +1,14 @@
 # KiCad
-hardware/kicad/*-backups/
-hardware/kicad/**/_autosave-*
-hardware/kicad/**/#auto_saved_files#*
-hardware/kicad/**/*.kicad_prl
-hardware/kicad/**/fp-info-cache
-hardware/kicad/**/*.kicad_pcb-bak
-hardware/kicad/**/*.kicad_sch-bak
-hardware/kicad/**/*.bak
-hardware/kicad/**/*.lck
-hardware/kicad/.history/
+hardware/*-backups/
+hardware/**/_autosave-*
+hardware/**/#auto_saved_files#*
+hardware/**/*.kicad_prl
+hardware/**/fp-info-cache
+hardware/**/*.kicad_pcb-bak
+hardware/**/*.kicad_sch-bak
+hardware/**/*.bak
+hardware/**/*.lck
+hardware/.history/
 
 # Manufacturing output (gerbers, drill, BOM, CPL): distributed via GitHub Releases
 hardware/manufacturing/
