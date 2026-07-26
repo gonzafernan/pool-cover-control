@@ -16,6 +16,13 @@ hardware/manufacturing/
 # Firmware build output
 firmware/build/
 
+# Unused IAR EWARM project (CubeMX-generated, not the project toolchain)
+firmware/EWARM/
+
+# clangd cache
+firmware/.cache/
+firmware/compile_commands.json
+
 # OS metadata
 .DS_Store
 Thumbs.db
