@@ -19,11 +19,10 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "gpio.h"
-#include "stm32g0xx_hal_gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "key.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -59,19 +58,19 @@ void SystemClock_Config(void);
 /* USER CODE END 0 */
 
 /**
- * @brief  The application entry point.
- * @retval int
- */
-int main(void) {
+  * @brief  The application entry point.
+  * @retval int
+  */
+int main(void)
+{
 
   /* USER CODE BEGIN 1 */
-
+  key_state_t key_state;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
 
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick.
-   */
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
 
   /* USER CODE BEGIN Init */
@@ -88,37 +87,32 @@ int main(void) {
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-
+  key_init(KEY_OPEN_GPIO_Port, KEY_OPEN_Pin, KEY_CLOSE_GPIO_Port,
+           KEY_CLOSE_Pin);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1) {
-    HAL_GPIO_WritePin(LED_OPEN_GPIO_Port, LED_OPEN_Pin, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(HB_OUT1_GPIO_Port, HB_OUT1_Pin, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(HB_OUT2_GPIO_Port, HB_OUT2_Pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(HB_OUT3_GPIO_Port, HB_OUT3_Pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(HB_OUT4_GPIO_Port, HB_OUT4_Pin, GPIO_PIN_SET);
-    HAL_Delay(8000);
-    HAL_GPIO_WritePin(LED_OPEN_GPIO_Port, LED_OPEN_Pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(HB_OUT1_GPIO_Port, HB_OUT1_Pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(HB_OUT2_GPIO_Port, HB_OUT2_Pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(HB_OUT3_GPIO_Port, HB_OUT3_Pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(HB_OUT4_GPIO_Port, HB_OUT4_Pin, GPIO_PIN_RESET);
-    HAL_Delay(8000);
+    key_update();
+    key_state = key_get_state();
+    if (key_state == KEY_OPEN) {
+      HAL_GPIO_WritePin(LED_OPEN_GPIO_Port, LED_OPEN_Pin, GPIO_PIN_SET);
+    } else {
+      HAL_GPIO_WritePin(LED_OPEN_GPIO_Port, LED_OPEN_Pin, GPIO_PIN_RESET);
+    }
 
-    HAL_GPIO_WritePin(LED_CLOSE_GPIO_Port, LED_CLOSE_Pin, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(HB_OUT1_GPIO_Port, HB_OUT1_Pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(HB_OUT2_GPIO_Port, HB_OUT2_Pin, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(HB_OUT3_GPIO_Port, HB_OUT3_Pin, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(HB_OUT4_GPIO_Port, HB_OUT4_Pin, GPIO_PIN_RESET);
-    HAL_Delay(8000);
-    HAL_GPIO_WritePin(LED_CLOSE_GPIO_Port, LED_CLOSE_Pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(HB_OUT1_GPIO_Port, HB_OUT1_Pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(HB_OUT2_GPIO_Port, HB_OUT2_Pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(HB_OUT3_GPIO_Port, HB_OUT3_Pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(HB_OUT4_GPIO_Port, HB_OUT4_Pin, GPIO_PIN_RESET);
-    HAL_Delay(8000);
+    if (key_state == KEY_CLOSE) {
+      HAL_GPIO_WritePin(LED_CLOSE_GPIO_Port, LED_CLOSE_Pin, GPIO_PIN_SET);
+    } else {
+      HAL_GPIO_WritePin(LED_CLOSE_GPIO_Port, LED_CLOSE_Pin, GPIO_PIN_RESET);
+    }
+
+    if (key_state == KEY_NONE) {
+      HAL_GPIO_WritePin(LED_FAULT_GPIO_Port, LED_FAULT_Pin, GPIO_PIN_SET);
+    } else {
+      HAL_GPIO_WritePin(LED_FAULT_GPIO_Port, LED_FAULT_Pin, GPIO_PIN_RESET);
+    }
 
     /* USER CODE END WHILE */
 
@@ -128,38 +122,41 @@ int main(void) {
 }
 
 /**
- * @brief System Clock Configuration
- * @retval None
- */
-void SystemClock_Config(void) {
+  * @brief System Clock Configuration
+  * @retval None
+  */
+void SystemClock_Config(void)
+{
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
   /** Configure the main internal regulator output voltage
-   */
+  */
   HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1);
 
   /** Initializes the RCC Oscillators according to the specified parameters
-   * in the RCC_OscInitTypeDef structure.
-   */
+  * in the RCC_OscInitTypeDef structure.
+  */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  {
     Error_Handler();
   }
 
   /** Initializes the CPU, AHB and APB buses clocks
-   */
-  RCC_ClkInitStruct.ClockType =
-      RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1;
+  */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK) {
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+  {
     Error_Handler();
   }
 }
@@ -169,10 +166,11 @@ void SystemClock_Config(void) {
 /* USER CODE END 4 */
 
 /**
- * @brief  This function is executed in case of error occurrence.
- * @retval None
- */
-void Error_Handler(void) {
+  * @brief  This function is executed in case of error occurrence.
+  * @retval None
+  */
+void Error_Handler(void)
+{
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
   __disable_irq();
@@ -181,15 +179,16 @@ void Error_Handler(void) {
   /* USER CODE END Error_Handler_Debug */
 }
 
-#ifdef USE_FULL_ASSERT
+#ifdef  USE_FULL_ASSERT
 /**
- * @brief  Reports the name of the source file and the source line number
- *         where the assert_param error has occurred.
- * @param  file: pointer to the source file name
- * @param  line: assert_param error line source number
- * @retval None
- */
-void assert_failed(uint8_t *file, uint32_t line) {
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
+  */
+void assert_failed(uint8_t *file, uint32_t line)
+{
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line
      number, ex: printf("Wrong parameters value: file %s on line %d\r\n", file,

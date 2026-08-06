@@ -71,6 +71,10 @@ void Error_Handler(void);
 #define LED_CLOSE_GPIO_Port GPIOA
 #define LED_FAULT_Pin GPIO_PIN_6
 #define LED_FAULT_GPIO_Port GPIOA
+#define KEY_OPEN_Pin GPIO_PIN_0
+#define KEY_OPEN_GPIO_Port GPIOB
+#define KEY_CLOSE_Pin GPIO_PIN_1
+#define KEY_CLOSE_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 
