@@ -56,7 +56,8 @@ Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_exti.c \
 Core/Src/system_stm32g0xx.c \
 Core/Src/sysmem.c \
 Core/Src/syscalls.c \
-App/Src/key.c
+App/Src/key.c \
+App/Src/hbridge.c
 
 # ASM sources
 ASM_SOURCES =  \

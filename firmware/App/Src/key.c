@@ -8,8 +8,6 @@
 
 #include <stdbool.h>
 
-#include "stm32g0xx_hal_gpio.h"
-
 #define DEBOUNCE_THRESHOLD_TICKS 500
 
 typedef enum {
