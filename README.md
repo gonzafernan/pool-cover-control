@@ -14,7 +14,6 @@ The board replaces a failed original controller. It is designed for direct drop-
 - **Logic supply:** 3.3V via LMR14206XMKE/NOPB synchronous buck converter
 - **Inputs:** 3-position maintained key switch, two NC limit switches, isolated via PC817 optocouplers
 - **Protection:** Reverse polarity (P-FET), motor TVS, relay hardware interlock, firmware watchdog
-- **PCB:** 100x100mm, 4-layer, 2oz copper, ENIG finish
 - **Manufacturer:** JLCPCB
 
 ## Firmware
